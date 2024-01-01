@@ -1,0 +1,86 @@
+<?php
+/**
+ * SOMECLASS Test.
+ *
+ * @package Fejz.
+ */
+
+declare(strict_types=1);
+
+namespace TMD\Documentation\Tests;
+
+use PHPUnit\Framework\TestCase;
+use TMD\Documentation\SOMECLASS;
+
+/**
+ * Undocumented class
+ */
+final class SOMECLASSTest extends BaseTest {
+	/**
+	 * Undocumented variable
+	 *
+	 * @var SOMECLASS|null
+	 */
+	private ?SOMECLASS $CLASSINSTANCE = null;
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	protected function setUp(): void {
+		$this->CLASSINSTANCE = new SOMECLASS();
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	protected function tearDown(): void {
+		unset( $this->CLASSINSTANCE );
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function testInstance(): void {
+		if ( is_a( $this->CLASSINSTANCE, SOMECLASS::class ) !== true ) {
+			self::fail( 'test_TESTID1_0' );
+			return;
+		}
+
+		// 1/ Empty.
+		$param = '';
+		$expected = '';
+		$result = $this->CLASSINSTANCE->FUNCTIONNAME( $param );
+		self::assertEquals( $expected, $result, 'test_TESTID1_1' );
+
+		// 2/ Basic.
+		$param = 'Hello';
+		$expected = 'World';
+		$result = $this->CLASSINSTANCE->FUNCTIONNAME( $param );
+		self::assertEquals( $expected, $result, 'test_TESTID1_2' );
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function testStatic(): void {
+		// 1/ Empty.
+		$param = '';
+		$expected = '';
+		$result = SOMECLASS::FUNCTIONNAME( $param );
+		self::assertEquals( $expected, $result, 'test_TESTID2_1' );
+
+		// 2/ Basic.
+		$param = 'Hello';
+		$expected = 'World';
+		$result = SOMECLASS::FUNCTIONNAME( $param );
+		self::assertEquals( $expected, $result, 'test_TESTID2_2' );
+	}
+}
