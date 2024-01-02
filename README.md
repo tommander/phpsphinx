@@ -6,7 +6,7 @@ Can be (actually, is meant to be) chained with Sphinx to automate generating of 
 
 ## Status
 
-**Beta**
+**Beta** ![PHP QA](https://github.com/tommander/phpsphinx/actions/workflows/php.yml/badge.svg)
 
 Code here is relatively safe to try, as it is checked by static analysis and is covered by unit tests to some extent.
 
