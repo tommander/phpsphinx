@@ -1,21 +1,6 @@
 name: PHP QA
 
 on:
-  push:
-    branches: 
-      - main
-      - devel
-    paths:
-      - '**.php'
-      - 'composer.json'
-      - 'composer.lock'
-      - 'phpcs.xml.dist'
-      - 'phpunit.xml'
-      - 'psalm.xml'
-  pull_request:
-    branches: 
-      - main
-      - devel
   workflow_dispatch:
 
 permissions:
@@ -45,4 +30,10 @@ jobs:
       run: composer install --prefer-dist --no-progress
 
     - name: Run test suite
-      run: composer run-script qa
+      run: composer run-script docs
+
+    - name: Upload build docs
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-html-docs
+        path: docs/build
