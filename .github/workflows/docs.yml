@@ -32,8 +32,14 @@ jobs:
     - name: Run test suite
       run: composer run-script docs
 
-    - name: Upload build docs
-      uses: actions/upload-artifact@v3
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        name: build-html-docs
-        path: docs/build
+        path: './docs/build'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4

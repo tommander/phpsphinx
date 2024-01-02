@@ -28,7 +28,7 @@
         "phpdocs": [
             "rm -rf docs/source/api/*",
             "touch docs/source/api/.gitkeep",
-            "@php index.php --inputdir=\"/srv/www/htdocs/phpsphinx/\" --outputdir=\"/srv/www/htdocs/phpsphinx/docs/source/api\""
+            "@php index.php --inputdir=\".\" --outputdir=\"docs/source/api\""
         ],
         "sphinx": [
             "make clean",
