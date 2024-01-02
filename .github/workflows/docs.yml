@@ -1,4 +1,4 @@
-name: PHP QA
+name: Build Docs
 
 on:
   workflow_dispatch:
