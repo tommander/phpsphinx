@@ -1,0 +1,343 @@
+<?php
+/**
+ * File for class FileMap.
+ *
+ * @package Documentation
+ */
+
+declare(strict_types=1);
+
+namespace TMD\Documentation\Formatters;
+
+use TMD\Documentation\Helper;
+use TMD\Documentation\Interfaces\FormatterInterface;
+use TMD\Documentation\PhpDoc;
+
+/**
+ * The FileMap class represents a custom map of PHP source file.
+ *
+ * @psalm-import-type FileIndex from \TMD\Documentation\PhpSphinx
+ * @psalm-import-type CodeHierarchy from \TMD\Documentation\DocblockExtract
+ */
+class FormatterHtml implements FormatterInterface {
+	/**
+	 * Hello.
+	 *
+	 * @var array<string, string>
+	 */
+	public const CLEAN_HTML_DATA = array(
+		'abstract' => '<div class="property"><span class="propname">abstract</span><span class="propvalue"></span></div>',
+		'access' => '<div class="property"><span class="propname">access</span><span class="propvalue">%%-access-%%</span></div>',
+		'author' => '<div class="property"><span class="propname">author</span><span class="propvalue"><a href="mailto:%%-email-%%">%%-name-%% <%%-email-%%></a></span></div>',
+		'category' => '<div class="property"><span class="propname">category</span><span class="propvalue">%%-desc-%%</span></div>',
+		'copyright' => '<div class="property"><span class="propname">copyright</span><span class="propvalue">%%-desc-%%</span></div>',
+		'deprecated' => '<div class="property"><span class="propname">deprecated</span><span class="propvalue">%%-desc-%%</span></div>',
+		'example' => '<div class="property"><span class="propname">example</span><span class="propvalue">(%%-type-%%) - %%-desc-%%</span></div>',
+		'final' => '<div class="property"><span class="propname">final</span><span class="propvalue"></span></div>',
+		'filesource' => '<div class="property"><span class="propname">filesource</span><span class="propvalue"></span></div>',
+		'global' => '<div class="property"><span class="propname">global</span><span class="propvalue">%%-name-%% (%%-type-%%) - %%-desc-%%</span></div>',
+		'ignore' => '<div class="property"><span class="propname">ignore</span><span class="propvalue"></span></div>',
+		'internal' => '<div class="property"><span class="propname">internal</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'license' => '<div class="property"><span class="propname">license</span><span class="propvalue"> (%%-url-%%) - %%-desc-%%</span></div>',
+		'link' => '<div class="property"><span class="propname">link</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'method' => '<div class="property"><span class="propname">method</span><span class="propvalue"> %%-name-%% (%%-type-%%) - %%-desc-%%</span></div>',
+		'name' => '<div class="property"><span class="propname">name</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'package' => '<div class="property"><span class="propname">package</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'param' => '<div class="property"><span class="propname">param</span><span class="propvalue">%%-type-%% %%-name-%%: %%-desc-%%</span></div>',
+		'property' => '<div class="property"><span class="propname">property</span><span class="propvalue"> %%-name-%% (%%-type-%%) - %%-desc-%% READWRITE</span></div>',
+		'property-read' => '<div class="property"><span class="propname">property</span><span class="propvalue"> %%-name-%% (%%-type-%%) - %%-desc-%% READ</span></div>',
+		'property-write' => '<div class="property"><span class="propname">property</span><span class="propvalue"> %%-name-%% (%%-type-%%) - %%-desc-%% WRITE</span></div>',
+		'return' => '<div class="property"><span class="propname">returns</span><span class="propvalue"> (%%-type-%%) - %%-desc-%%</span></div>',
+		'see' => '<div class="property"><span class="propname">see</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'since' => '<div class="property"><span class="propname">since</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'static' => '<div class="property"><span class="propname">static</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'staticvar' => '<div class="property"><span class="propname">var</span><span class="propvalue"> %%-type-%% static %%-name-%%: %%-desc-%%</span></div>',
+		'subpackage' => '<div class="property"><span class="propname">subpackage</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'todo' => '<div class="property"><span class="propname">todo</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'tutorial' => '<div class="property"><span class="propname">tutorial</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'uses' => '<div class="property"><span class="propname">uses</span><span class="propvalue"> %%-desc-%%</span></div>',
+		'var' => '<div class="property"><span class="propname">var</span><span class="propvalue"> %%-type-%% %%-name-%%: %%-desc-%%</span></div>',
+		'version' => '<div class="property"><span class="propname">version</span><span class="propvalue"> %%-desc-%%</span></div>',
+	);
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $type    Type.
+	 * @param string $name    Name.
+	 * @param string $content Content.
+	 *
+	 * @return string
+	 */
+	public static function type_to_html( string $type, string $name, string $content ): string {
+		$type_lower = strtolower( trim( $type ) );
+		return "<div class=\"design design_$type_lower\"><div class=\"name\">$name</div><div class=\"content\">$content</div></div>";
+
+		/*
+		Iif ( 'attr' === $type_lower ) {
+			$directive = self::DIRECTIVE_ATTR;
+		}
+		if ( 'case' === $type_lower ) {
+			$directive = self::DIRECTIVE_CASE;
+		}
+		if ( 'class' === $type_lower ) {
+			$directive = self::DIRECTIVE_CLASS;
+		}
+		if ( 'const' === $type_lower ) {
+			$directive = self::DIRECTIVE_CONST;
+		}
+		if ( 'enum' === $type_lower ) {
+			$directive = self::DIRECTIVE_ENUM;
+		}
+		if ( 'exception' === $type_lower ) {
+			$directive = self::DIRECTIVE_EXCEPTION;
+		}
+		if ( 'function' === $type_lower ) {
+			$directive = self::DIRECTIVE_FUNCTION;
+		}
+		if ( 'global' === $type_lower ) {
+			$directive = self::DIRECTIVE_GLOBAL;
+		}
+		if ( 'interface' === $type_lower ) {
+			$directive = self::DIRECTIVE_INTERFACE;
+		}
+		if ( 'namespace' === $type_lower ) {
+			$directive = self::DIRECTIVE_NAMESPACE;
+		}
+		if ( 'method' === $type_lower ) {
+			$directive = self::DIRECTIVE_METHOD;
+		}
+		if ( 'staticmethod' === $type_lower ) {
+			$directive = self::DIRECTIVE_STATICMETHOD;
+		}
+		if ( 'trait' === $type_lower ) {
+			$directive = self::DIRECTIVE_TRAIT;
+		}
+		if ( 'var' === $type_lower ) {
+			$directive = self::DIRECTIVE_ATTR;
+		}
+		if ( '' === $directive ) {
+			return $content;
+		}
+		return self::directive( $directive, $name, $content ) ?? '';
+		*/
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $text       Text.
+	 * @param int    $min_indent Min indent.
+	 *
+	 * @return string
+	 */
+	public static function fix_indentation( string $text, int $min_indent ): string {
+		if ( $min_indent <= 0 ) {
+			return $text;
+		}
+		return preg_replace(
+			'/^\s+$/',
+			'',
+			preg_replace(
+				sprintf(
+					'/^ {0,%d}([^ \n\r\0])/m',
+					( $min_indent * 3 ) - 1
+				),
+				sprintf(
+					'%s$1',
+					str_repeat( '   ', $min_indent )
+				),
+				$text
+			)
+		);
+	}
+
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string        $title     Title.
+	 * @param CodeHierarchy $hierarchy Hierarchy.
+	 * @param string        $commit    Commit.
+	 * @param string        $file_rel  File rel.
+	 *
+	 * @return string
+	 */
+	public static function format( string $title, array $hierarchy, string $commit = '', string $file_rel = '' ): string { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
+		$underline = str_repeat( '=', strlen( $title ) );
+		$indent = 0;
+
+		$file_template_path = Helper::make_path( __DIR__, '..', '..', 'templates', 'html', 'file.html' );
+		$file_template = '';
+		if ( file_exists( $file_template_path ) === true ) {
+			$file_template = file_get_contents( $file_template_path );
+		}
+
+		$phpdoc = new PhpDoc();
+
+		$hierarchy_content = '';
+		foreach ( $hierarchy as $hier_item ) {
+			$hier_docblock = Helper::make_string( $hier_item['docblock'] );
+			$hier_type = Helper::make_string( $hier_item['type'] );
+			if ( '' !== $hier_docblock || 'namespace' === $hier_type ) {
+				$hier_name = Helper::make_string( $hier_item['name'] );
+				$phpdoc->clear();
+				$phpdoc->docblock = "<?php\n" . $hier_docblock;
+				$phpdoc->parse();
+				$hier_rst = self::output_str( $phpdoc );
+				$hierarchy_content .= self::fix_indentation( self::type_to_html( $hier_type, $hier_name, self::fix_indentation( $hier_rst, $indent + 1 ) ), $indent ) . PHP_EOL;
+			}
+			if ( in_array( $hier_type, array( 'class', 'interface', 'trait' ) ) ) {
+				$indent = 1;
+			}
+		}
+		$file_content = self::substitute( $file_template, '', self::generated_automatically( gmdate( 'c' ), $commit, $file_rel ), $hierarchy_content, '' );
+		return sprintf(
+			$file_content,
+			$title,
+			$underline
+		);
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $date   Date.
+	 * @param string $commit Commit.
+	 * @param string $file   File.
+	 *
+	 * @return string
+	 */
+	public static function generated_automatically( string $date, string $commit, string $file ): string {
+		$file_template_path = Helper::make_path( __DIR__, '..', '..', 'templates', 'html', 'generated.html' );
+		$file_template = '';
+		if ( file_exists( $file_template_path ) === true ) {
+			$file_template = file_get_contents( $file_template_path );
+		}
+
+		$file_link = '';
+		if ( '' !== $file ) {
+			$file_link = '<a href="%2$s%1$s">%1$s</a>';
+		}
+
+		return sprintf(
+			$file_template,
+			$date,
+			sprintf(
+				'<a href="%2$s%3$s">#%1$s</a>',
+				substr( $commit, 0, 7 ),
+				'https://github.com/tommander/phpsphinx/commit/',
+				$commit
+			),
+			sprintf(
+				$file_link,
+				$file,
+				'https://github.com/tommander/phpsphinx/blob/' . $commit . '/'
+			)
+		) . PHP_EOL;
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $title Title.
+	 *
+	 * @return string
+	 */
+	public static function get_empty_index( string $title = '' ): string {
+		if ( '' === $title ) {
+			$title = 'Subfolder';
+		}
+		$underline = str_repeat( '=', strlen( $title ) );
+
+		$index_template_path = Helper::make_path( __DIR__, '..', '..', 'templates', 'html', 'index.html' );
+		$index_template = '';
+		if ( file_exists( $index_template_path ) === true ) {
+			$index_template = file_get_contents( $index_template_path );
+		}
+		return sprintf(
+			$index_template,
+			$title,
+			$underline
+		);
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $what            What.
+	 * @param string $subfolder_index Subfolder index.
+	 *
+	 * @return string
+	 */
+	public static function add_to_index( string $what, string $subfolder_index ): string {
+		return str_replace( '<!--`ENDOFTOC`-->', "\t\t<li><a href=\"$what.html\">$what</a></li>" . PHP_EOL . '<!--`ENDOFTOC`-->', $subfolder_index );
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @param string $text         Text.
+	 * @param string $before_toc   Before ToC.
+	 * @param string $after_toc    After ToC.
+	 * @param string $start_of_toc Start of ToC.
+	 * @param string $end_of_toc   End of ToC.
+	 *
+	 * @return string
+	 */
+	public static function substitute( string $text, string $before_toc, string $after_toc, string $start_of_toc, string $end_of_toc ): string {
+		return str_replace(
+			array( '<!--`BEFORETOC`-->', '<!--`AFTERTOC`-->', '<!--`STARTOFTOC`-->', '<!--`ENDOFTOC`-->' ),
+			array( $before_toc, $after_toc, $start_of_toc, $end_of_toc ),
+			$text
+		);
+	}
+
+	/**
+	 * Returns a representation of this instance of PhpDoc in restructuredText.
+	 *
+	 * @param \TMD\Documentation\PhpDoc $phpdoc PHPDoc.
+	 *
+	 * @return string
+	 */
+	public static function output_str( \TMD\Documentation\PhpDoc $phpdoc ): string {
+		$res = $phpdoc->description . PHP_EOL;
+
+		foreach ( $phpdoc->data as $data_tag => $data_data ) {
+			if ( is_array( $data_data['value'] ) ) {
+				try {
+					foreach ( $data_data['value'] as &$one_value ) {
+						$arr = array();
+						foreach ( $data_data['fields'] as $field ) {
+							if ( array_key_exists( $field, $one_value ) !== true || ( 'deprecated' !== $data_tag && 'desc' !== $field && trim( $one_value[ $field ] ) === '' ) ) {
+								$arr[ $field ] = 'no' . $field;
+							} else {
+								$arr[ $field ] = trim( $one_value[ $field ] );
+							}
+						}
+						$res .= $phpdoc->replace( self::CLEAN_HTML_DATA[ $data_tag ], $arr ) . PHP_EOL;
+					}
+				} catch ( \ArgumentCountError $exc ) {
+					printf(
+						'[ACE] %s%s',
+						json_encode(
+							array(
+								'html' => self::CLEAN_HTML_DATA[ $data_tag ],
+								// 'arr' => $arr,.
+							),
+							JSON_PRETTY_PRINT
+						),
+						PHP_EOL
+					);
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo "ACE:\"$data_tag\"" . PHP_EOL;
+				}
+				continue;
+			}
+			if ( true === $data_data['value'] ) {
+				$res .= self::CLEAN_HTML_DATA[ $data_tag ] . PHP_EOL;
+			}
+		}
+		return $res;
+	}
+}

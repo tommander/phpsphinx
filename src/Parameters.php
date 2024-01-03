@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace TMD\Documentation;
 
+use TMD\Documentation\Interfaces\FormatterInterface;
+
 /**
  * The Parameters class prepares program parameters.
  */
@@ -89,8 +91,8 @@ class Parameters {
 			return '[ERROR] Output directory "' . $output_directory . '" is empty or does not exist.';
 		}
 
-		if ( in_array( $format, array_keys( Formatter::FORMATS ), true ) !== true ) {
-			return '[ERROR] Unknown format "' . $format . '". Known formats are "' . implode( '", "', array_keys( Formatter::FORMATS ) ) . '".';
+		if ( in_array( $format, array_keys( FormatterInterface::FORMATS ), true ) !== true ) {
+			return '[ERROR] Unknown format "' . $format . '". Known formats are "' . implode( '", "', array_keys( FormatterInterface::FORMATS ) ) . '".';
 		}
 
 		return true;

@@ -6,3 +6,4 @@ Getting started
    :glob:
 
    install
+   overview

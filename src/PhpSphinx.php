@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace TMD\Documentation;
 
+use TMD\Documentation\Interfaces\FormatterInterface;
+use TMD\Documentation\Formatters\FormatterRst;
+
 /**
  * The PhpSphinx class is glueing together features to extract and render inline documentation from PHP source files.
  *
@@ -79,9 +82,9 @@ class PhpSphinx {
 	/**
 	 * Undocumented variable
 	 *
-	 * @var Formatter
+	 * @var FileIndexer
 	 */
-	private Formatter $formatter;
+	private FileIndexer $fileindexer;
 
 	/**
 	 * Undocumented function
@@ -91,7 +94,7 @@ class PhpSphinx {
 		$this->docblock_extract = new DocblockExtract();
 		$this->parameters = new Parameters();
 		$this->tokenizer = new Tokenizer();
-		$this->formatter = new Formatter();
+		$this->fileindexer = new FileIndexer();
 	}
 
 	/**
@@ -162,7 +165,34 @@ class PhpSphinx {
 		$inputdir = Helper::make_string( $this->parameters->params['inputdir'] );
 		$outputdir = Helper::make_string( $this->parameters->params['outputdir'] );
 
-		$this->run( $format, $inputdir, $outputdir, $dry_run );
+		$this->generate_documentation( $format, $inputdir, $outputdir, $dry_run );
+	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return string|false
+	 */
+	public function get_current_commit(): string|false {
+		$file_head = Helper::make_path( __DIR__, '..', '.git', 'HEAD' );
+		if ( file_exists( $file_head ) !== true ) {
+			return false;
+		}
+		$file_head_content = file_get_contents( $file_head );
+		if ( preg_match( '/^(.*):\s+(.*)$/m', $file_head_content, $matches ) !== 1 ) {
+			return false;
+		}
+
+		$file_ref = Helper::make_path( __DIR__, '..', '.git', $matches[2] );
+		if ( file_exists( $file_ref ) !== true ) {
+			return false;
+		}
+		$file_ref_content = file_get_contents( $file_ref );
+		if ( preg_match( '/[abcdef0123456789]{40}/', $file_ref_content, $matches_ref ) !== 1 ) {
+			return false;
+		}
+
+		return $matches_ref[0];
 	}
 
 	/**
@@ -175,7 +205,7 @@ class PhpSphinx {
 	 *
 	 * @return void
 	 */
-	public function run( string $format, string $inputdir, string $outputdir, bool $dry_run = false ): void {
+	public function generate_documentation( string $format, string $inputdir, string $outputdir, bool $dry_run = false ): void {
 		if ( '' === $inputdir || file_exists( $inputdir ) !== true ) {
 			$this->writeln( '[ERROR] Input directory "' . $inputdir . '" does not exist.' );
 			return;
@@ -184,21 +214,27 @@ class PhpSphinx {
 			$this->writeln( '[ERROR] Output directory "' . $outputdir . '" does not exist.' );
 			return;
 		}
-		if ( '' === $format || in_array( $format, array_keys( Formatter::FORMATS ), true ) !== true ) {
-			$this->writeln( '[ERROR] Format "' . $format . '" is unknown. Correct is one of (' . implode( ', ', array_keys( Formatter::FORMATS ) ) . ').' );
+		if ( '' === $format || in_array( $format, array_keys( FormatterInterface::FORMATS ), true ) !== true ) {
+			$this->writeln( '[ERROR] Format "' . $format . '" is unknown. Correct is one of (' . implode( ', ', array_keys( FormatterInterface::FORMATS ) ) . ').' );
 			return;
 		}
 
 		$namespace_list = array();
-		$index_files = array(
-			'.' => array(),
-		);
+		$this->fileindexer->start();
+
+		/**
+		 * Hello.
+		 *
+		 * @var class-string<FormatterInterface>
+		 */
+		$formatter_intf = FormatterInterface::FORMATS[ $format ]['class'];
+		$commit = $this->get_current_commit();
 
 		// Recursive dir scan.
 		$this->writeln( 'Searching for PHP source files...' );
-		$phpfile_list = $this->dir_list->scandir_recursive( $inputdir, array( '/\.php$/' ), array( '/vendor\//', '/\.asset\.php$/', '/\/tests\/Test/' ) );
-		$this->writeln( 'Found ' . strval( count( $phpfile_list ) ) . ' files.' );
-		foreach ( $phpfile_list as $phpfile_info ) {
+		$artifact_fileinfos = $this->dir_list->scandir_recursive( $inputdir, array( '/\.php$/' ), array( '/vendor\//', '/\.asset\.php$/', '/\/tests\/Test/' ) );
+		$this->writeln( 'Found ' . strval( count( $artifact_fileinfos ) ) . ' files.' );
+		foreach ( $artifact_fileinfos as $phpfile_info ) {
 			$phpfile_full = $phpfile_info->getPathname();
 			$phpfile_name = $phpfile_info->getFilename();
 
@@ -206,8 +242,8 @@ class PhpSphinx {
 
 			// Tokenize content.
 			$this->writeln( '   Tokenizing...' );
-			$tokens = $this->tokenizer->tokenize_file( $phpfile_full );
-			if ( false === $tokens ) {
+			$artifact_tokenlist = $this->tokenizer->tokenize_file( $phpfile_full );
+			if ( false === $artifact_tokenlist ) {
 				$this->writeln( '   [WARNING] File cannot be tokenized.' );
 				continue;
 			}
@@ -215,22 +251,19 @@ class PhpSphinx {
 			// Create code hierarchy and collect namespaces.
 			$this->writeln( '   Creating code hierarchy...' );
 			$namespace = '';
-			$hierarchy = $this->docblock_extract->get_code_hierarchy( $tokens, $phpfile_name, $namespace );
+			$artifact_codehierarchy = $this->docblock_extract->get_code_hierarchy( $artifact_tokenlist, $phpfile_name, $namespace );
 			if ( '' !== $namespace && in_array( $namespace, $namespace_list, true ) !== true ) {
 				$namespace_list[] = $namespace;
 			}
 
 			// Format code map.
 			$this->writeln( '   Formatting code map...' );
-			$outfile_content = $this->formatter->call_func( $format, 'format', $phpfile_name, $hierarchy );
+			$file_relative = Helper::relative_path( realpath( Helper::make_path( __DIR__, '..' ) ), $phpfile_full );
+			$outfile_content = $formatter_intf::format( $phpfile_name, $artifact_codehierarchy, Helper::make_string( $commit ), $file_relative );
 
 			// Name output file and create output file path.
 			$this->writeln( '   Creating file name...' );
-			$outfile_ext = $this->formatter->get_format_ext( $format );
-			if ( false === $outfile_ext ) {
-				$this->writeln( '[WARNING] Format "' . $format . '" does not have an extension.' );
-				continue;
-			}
+			$outfile_ext = FormatterInterface::FORMATS[ $format ]['ext'];
 			$outfile_name = Helper::make_path( Helper::fix_filename( $namespace ), Helper::fix_filename( $phpfile_name ) . $outfile_ext );
 			$outfile_path = Helper::make_path( $outputdir, Helper::fix_filename( $namespace ) );
 			if ( file_exists( $outfile_path ) !== true ) {
@@ -240,46 +273,27 @@ class PhpSphinx {
 			// Add file to index.
 			$this->writeln( '   Adding file to index...' );
 			$index_key = ( ( '' === $namespace ) ? '.' : addslashes( $namespace ) );
-			if ( array_key_exists( $index_key, $index_files ) !== true ) {
-				$index_files[ $index_key ] = array();
-			}
-			$index_files[ $index_key ][] = Helper::fix_filename( $phpfile_name );
+			$this->fileindexer->add( $index_key, Helper::fix_filename( $phpfile_name ) );
 
 			// Save to file.
 			$this->writeln( '   File will be saved to "' . $outfile_name . '"' );
-			if ( '' !== $outfile_content && true !== $dry_run ) {
+			if ( true !== $dry_run ) {
 				$outfile = Helper::make_path( $outputdir, $outfile_name );
 				file_put_contents( $outfile, $outfile_content );
-			}
-			if ( count( $hierarchy ) > 0 && true !== $dry_run ) {
-				$outfile = Helper::make_path( $outputdir, $outfile_name . '.hierarchy.json' );
-				file_put_contents( $outfile, json_encode( $hierarchy, JSON_PRETTY_PRINT ) );
-			}
-			if ( count( $tokens ) > 0 && true !== $dry_run ) {
-				$outfile = Helper::make_path( $outputdir, $outfile_name . '.tokens.json' );
-				file_put_contents( $outfile, json_encode( $tokens, JSON_PRETTY_PRINT ) );
 			}
 
 			$this->writeln( '   Done.' );
 		}
 
 		$this->writeln( 'Saving index files...' );
-		foreach ( $index_files as $index_file => $index_subfiles ) {
-			$index_content = $this->formatter->call_func( $format, 'get_empty_subfolder_index', ( '' === $index_file || '.' === $index_file ) ? 'API' : $index_file );
-			foreach ( $index_subfiles as $index_subfile ) {
-				$index_content = $this->formatter->call_func( $format, 'add_to_subfolder_index', Helper::fix_filename( $index_subfile ), $index_content );
-			}
-			if ( true !== $dry_run ) {
-				if ( '.' === $index_file || '' === $index_file ) {
-					foreach ( $namespace_list as $one_namespace ) {
-						$index_content = $this->formatter->call_func( $format, 'add_to_subfolder_index', Helper::fix_filename( $one_namespace ) . '/index', $index_content );
-					}
-					file_put_contents( Helper::make_path( $outputdir, 'index.rst' ), $index_content );
-				} else {
-					file_put_contents( Helper::make_path( $outputdir, Helper::fix_filename( $index_file ), 'index.rst' ), $index_content );
-				}
-			}
-		}
+		$this->fileindexer->finish(
+			$formatter_intf,
+			$namespace_list,
+			Helper::make_string( $commit ),
+			$dry_run,
+			$outputdir,
+			$format
+		);
 
 		$this->writeln( 'Script finished.' );
 	}

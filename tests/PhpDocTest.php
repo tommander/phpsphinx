@@ -128,7 +128,6 @@ final class PhpDocTest extends BaseTest {
 			'regex' => '',
 			'fields' => array( 'type' ),
 			'value' => false,
-			'rst' => ':brokenabstract:',
 		);
 		$input = '';
 		$tag = 'brokenabstract';
@@ -196,23 +195,6 @@ final class PhpDocTest extends BaseTest {
 		$data_before = $this->phpdoc->data;
 		$this->phpdoc->parse();
 		self::assertEquals( $data_before, $this->phpdoc->data, 'test_docblocktorst_N' );
-	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @return void
-	 */
-	public function testToRst(): void {
-		if ( is_a( $this->phpdoc, PhpDoc::class ) !== true ) {
-			self::fail( 'test_XXX_0' );
-			return;
-		}
-
-		// N/ XXX.
-		$expected = PHP_EOL;
-		$result = $this->phpdoc->toRst();
-		self::assertEquals( $expected, $result, 'test_docblocktorst_N' );
 	}
 
 	/**

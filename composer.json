@@ -30,6 +30,11 @@
             "touch docs/source/api/.gitkeep",
             "@php index.php --inputdir=\".\" --outputdir=\"docs/source/api\""
         ],
+        "phpdocs-html": [
+            "rm -rf docs/source/api/*",
+            "touch docs/source/api/.gitkeep",
+            "@php index.php --format=\"html\" --inputdir=\".\" --outputdir=\"docs/source/api\""
+        ],
         "sphinx": [
             "make clean",
             "make html"
@@ -37,6 +42,9 @@
         "docs": [
             "@phpdocs",
             "@sphinx"
+        ],
+        "docs-html": [
+            "@phpdocs-html"
         ]
     },
     "require": {
@@ -54,6 +62,7 @@
     "autoload": {
         "psr-4": {
             "TMD\\Documentation\\": "src/",
+            "TMD\\Documentation\\Interfaces\\": "src/Interfaces/",
             "TMD\\Documentation\\Tests\\": "tests/"
         },
         "exclude-from-classmap": [

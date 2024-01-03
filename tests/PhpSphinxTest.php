@@ -112,9 +112,9 @@ final class PhpSphinxTest extends BaseTest {
 	 *
 	 * @return void
 	 */
-	public function testRun(): void {
+	public function testGenerateDocumentation(): void {
 		if ( is_a( $this->phpsphinx, PhpSphinx::class ) !== true ) {
-			self::fail( 'test_run_0' );
+			self::fail( 'test_generatedocumentation_0' );
 			return;
 		}
 
@@ -124,11 +124,11 @@ final class PhpSphinxTest extends BaseTest {
 		$outputdir = '';
 		$dry_run = true;
 		ob_start();
-		$this->phpsphinx->run( $format, $inputdir, $outputdir, $dry_run );
+		$this->phpsphinx->generate_documentation( $format, $inputdir, $outputdir, $dry_run );
 		$result = ob_get_contents();
 		ob_end_clean();
 		$expected = '[ERROR] Input directory "" does not exist.' . PHP_EOL;
-		self::assertEquals( $expected, $result, 'test_run_1' );
+		self::assertEquals( $expected, $result, 'test_generatedocumentation_1' );
 
 		// 2/ Non-sense
 		$format = 'pdf';
@@ -136,11 +136,11 @@ final class PhpSphinxTest extends BaseTest {
 		$outputdir = '/this/does/not/exist';
 		$dry_run = true;
 		ob_start();
-		$this->phpsphinx->run( $format, $inputdir, $outputdir, $dry_run );
+		$this->phpsphinx->generate_documentation( $format, $inputdir, $outputdir, $dry_run );
 		$result = ob_get_contents();
 		ob_end_clean();
 		$expected = '[ERROR] Input directory "/hello/world/" does not exist.' . PHP_EOL;
-		self::assertEquals( $expected, $result, 'test_run_2' );
+		self::assertEquals( $expected, $result, 'test_generatedocumentation_2' );
 
 		// 3/ Non-sense with existing inputdir
 		$format = 'pdf';
@@ -148,11 +148,11 @@ final class PhpSphinxTest extends BaseTest {
 		$outputdir = '/this/does/not/exist';
 		$dry_run = true;
 		ob_start();
-		$this->phpsphinx->run( $format, $inputdir, $outputdir, $dry_run );
+		$this->phpsphinx->generate_documentation( $format, $inputdir, $outputdir, $dry_run );
 		$result = ob_get_contents();
 		ob_end_clean();
 		$expected = '[ERROR] Output directory "/this/does/not/exist" does not exist.' . PHP_EOL;
-		self::assertEquals( $expected, $result, 'test_run_3' );
+		self::assertEquals( $expected, $result, 'test_generatedocumentation_3' );
 
 		// 4/ Non-sense with existing inputdir and outputdir
 		$format = 'pdf';
@@ -160,11 +160,11 @@ final class PhpSphinxTest extends BaseTest {
 		$outputdir = Helper::make_path( __DIR__, 'TestDirEmpty' );
 		$dry_run = true;
 		ob_start();
-		$this->phpsphinx->run( $format, $inputdir, $outputdir, $dry_run );
+		$this->phpsphinx->generate_documentation( $format, $inputdir, $outputdir, $dry_run );
 		$result = ob_get_contents();
 		ob_end_clean();
 		$expected = '[ERROR] Format "pdf" is unknown. Correct is one of (rst, md, html).' . PHP_EOL;
-		self::assertEquals( $expected, $result, 'test_run_4' );
+		self::assertEquals( $expected, $result, 'test_generatedocumentation_4' );
 
 		// 5/ Basic
 		$format = 'rst';
@@ -172,7 +172,7 @@ final class PhpSphinxTest extends BaseTest {
 		$outputdir = Helper::make_path( __DIR__, 'TestDirEmpty' );
 		$dry_run = true;
 		ob_start();
-		$this->phpsphinx->run( $format, $inputdir, $outputdir, $dry_run );
+		$this->phpsphinx->generate_documentation( $format, $inputdir, $outputdir, $dry_run );
 		$result = ob_get_contents();
 		ob_end_clean();
 		$expected = <<<EOS
@@ -182,6 +182,6 @@ final class PhpSphinxTest extends BaseTest {
 		Script finished.
 
 		EOS;
-		self::assertEquals( $expected, $result, 'test_run_5' );
+		self::assertEquals( $expected, $result, 'test_generatedocumentation_5' );
 	}
 }

@@ -30,7 +30,7 @@ release = '0.1.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx_rtd_theme', 'sphinxcontrib.phpdomain']
+extensions = ['sphinx_rtd_theme', 'sphinxcontrib.phpdomain', 'sphinx.ext.graphviz']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

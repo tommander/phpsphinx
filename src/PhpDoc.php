@@ -14,7 +14,7 @@ use Exception;
 /**
  * The PhpDoc class parses PHPDoc block comments.
  *
- * @psalm-type DocblockData = array<string, array{regex: string, fields: list<string>, value: bool|list<array<string, string>>, rst: string}>
+ * @psalm-type DocblockData = array<string, array{regex: string, fields: list<string>, value: bool|list<array<string, string>>}>
  */
 class PhpDoc implements \Stringable {
 	/**
@@ -45,193 +45,161 @@ class PhpDoc implements \Stringable {
 			'regex' => '',
 			'fields' => array(),
 			'value' => false,
-			'rst' => ':abstract:',
 		),
 		'access' => array(
 			'regex' => 'ACCESS',
 			'fields' => array( 'access' ),
 			'value' => array(),
-			'rst' => ':access: %%-access-%%',
 		),
 		'author' => array(
 			'regex' => 'AUTHOR',
 			'fields' => array( 'name', 'email' ),
 			'value' => array(),
-			'rst' => ':author: %%-name-%% <%%-email-%%>',
 		),
 		'category' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':category: %%-desc-%%',
 		),
 		'copyright' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':copyright: %%-desc-%%',
 		),
 		'deprecated' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':deprecated: %%-desc-%%',
 		),
 		'example' => array(
 			'regex' => 'TD',
 			'fields' => array( 'type', 'desc' ),
 			'value' => array(),
-			'rst' => ':example: (%%-type-%%) - %%-desc-%%',
 		),
 		'final' => array(
 			'regex' => '',
 			'fields' => array(),
 			'value' => false,
-			'rst' => ':final:',
 		),
 		'filesource' => array(
 			'regex' => '',
 			'fields' => array(),
 			'value' => false,
-			'rst' => ':filesource:',
 		),
 		'global' => array(
 			'regex' => 'TND', // '/(?<type>\S+)\s+(?<name>\$\S+)?(?<desc>.*)/',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':global: %%-name-%% (%%-type-%%) - %%-desc-%%',
 		),
 		'ignore' => array(
 			'regex' => '',
 			'fields' => array(),
 			'value' => false,
-			'rst' => ':ignore:',
 		),
 		'internal' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':internal: %%-desc-%%',
 		),
 		'license' => array(
 			'regex' => 'UD',
 			'fields' => array( 'url', 'desc' ),
 			'value' => array(),
-			'rst' => ':license: (%%-url-%%) - %%-desc-%%',
 		),
 		'link' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':link: %%-desc-%%',
 		),
 		'method' => array(
 			'regex' => 'TFD',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':method: %%-name-%% (%%-type-%%) - %%-desc-%%',
 		),
 		'name' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':name: %%-desc-%%',
 		),
 		'package' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':package: %%-desc-%%',
 		),
 		'param' => array(
 			'regex' => 'TND',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':param %%-type-%% %%-name-%%: %%-desc-%%',
 		),
 		'property' => array(
 			'regex' => 'TND',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':property: %%-name-%% (%%-type-%%) - %%-desc-%% READWRITE',
 		),
 		'property-read' => array(
 			'regex' => 'TND',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':property: %%-name-%% (%%-type-%%) - %%-desc-%% READ',
 		),
 		'property-write' => array(
 			'regex' => 'TND',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':property: %%-name-%% (%%-type-%%) - %%-desc-%% WRITE',
 		),
 		'return' => array(
 			'regex' => 'TD',
 			'fields' => array( 'type', 'desc' ),
 			'value' => array(),
-			'rst' => ':returns: (%%-type-%%) - %%-desc-%%',
 		),
 		'see' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':see: %%-desc-%%',
 		),
 		'since' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':since: %%-desc-%%',
 		),
 		'static' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':static: %%-desc-%%',
 		),
 		'staticvar' => array(
 			'regex' => 'TND',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':var %%-type-%% static %%-name-%%: %%-desc-%%',
 		),
 		'subpackage' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':subpackage: %%-desc-%%',
 		),
 		'todo' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':todo: %%-desc-%%',
 		),
 		'tutorial' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':tutorial: %%-desc-%%',
 		),
 		'uses' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':uses: %%-desc-%%',
 		),
 		'var' => array(
 			'regex' => 'TND',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
-			'rst' => ':var %%-type-%% %%-name-%%: %%-desc-%%',
 		),
 		'version' => array(
 			'regex' => 'REST',
 			'fields' => array( 'desc' ),
 			'value' => array(),
-			'rst' => ':version: %%-desc-%%',
 		),
 	);
 	/**
@@ -428,52 +396,6 @@ class PhpDoc implements \Stringable {
 		}
 
 		$this->parse_docblock( $docblock );
-	}
-
-	/**
-	 * Returns a representation of this instance of PhpDoc in restructuredText.
-	 *
-	 * @return string
-	 */
-	public function toRst(): string {
-		$res = $this->description . PHP_EOL;
-
-		foreach ( $this->data as $data_tag => $data_data ) {
-			if ( is_array( $data_data['value'] ) ) {
-				try {
-					foreach ( $data_data['value'] as &$one_value ) {
-						$arr = array();
-						foreach ( $data_data['fields'] as $field ) {
-							if ( array_key_exists( $field, $one_value ) !== true || ( 'deprecated' !== $data_tag && 'desc' !== $field && trim( $one_value[ $field ] ) === '' ) ) {
-								$arr[ $field ] = 'no' . $field;
-							} else {
-								$arr[ $field ] = trim( $one_value[ $field ] );
-							}
-						}
-						$res .= $this->replace( $data_data['rst'], $arr ) . PHP_EOL;
-					}
-				} catch ( \ArgumentCountError $exc ) {
-					printf(
-						'[ACE] %s%s',
-						json_encode(
-							array(
-								'rst' => $data_data['rst'],
-								// 'arr' => $arr,.
-							),
-							JSON_PRETTY_PRINT
-						),
-						PHP_EOL
-					);
-					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					echo "ACE:\"$data_tag\"" . PHP_EOL;
-				}
-				continue;
-			}
-			if ( true === $data_data['value'] ) {
-				$res .= $data_data['rst'] . PHP_EOL;
-			}
-		}
-		return $res;
 	}
 
 	/**

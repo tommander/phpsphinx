@@ -1,12 +1,12 @@
 # PhpSphinx
 
-A PHP application that scans the given input directory for PHP source files, extracts all docblocks and generates a Sphinx-ready API documentation in the output folder.
+A PHP script for use in terminal. This script scans the given input directory for PHP source files, extracts all docblocks and generates a Sphinx-ready API documentation in the output folder.
 
 Can be (actually, is meant to be) chained with Sphinx to automate generating of documentation.
 
 ## Status
 
-**Beta** ![PHP QA](https://github.com/tommander/phpsphinx/actions/workflows/php.yml/badge.svg)
+:hatching_chick: **Beta** ![PHP QA](https://github.com/tommander/phpsphinx/actions/workflows/php.yml/badge.svg) ![Build Docs](https://github.com/tommander/phpsphinx/actions/workflows/docs.yml/badge.svg)
 
 Code here is relatively safe to try, as it is checked by static analysis and is covered by unit tests to some extent.
 
@@ -52,7 +52,7 @@ composer install
 
 ## Quality Assurance
 
-Coding standard is `WordPress` ([PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer)).
+[PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) with coding standard `WordPress`.
 
 [psalm](https://psalm.dev/) for static analysis.
 
@@ -63,10 +63,18 @@ composer qa
 composer docs
 ```
 
+## Issues
+
+Please track in [GitHub Issues](https://github.com/tommander/phpsphinx/issues).
+
+## Pull Requests
+
+[Contributing](.github/CONTRIBUTING.md).
+
 ## Documentation
 
-At this moment, you have to build the documentation first. Later the current documentation will be available and linked here.
+[Generated documentation](https://tommander.github.io/phpsphinx/).
 
 ## License
 
-MIT
+[MIT License](LICENSE).

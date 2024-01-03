@@ -70,7 +70,7 @@ final class DirListTest extends BaseTest {
 			$one_result = end( $one_path );
 		}
 		sort( $result );
-		$expected = array( 'BaseTest.php', 'DirListTest.php', 'DocblockExtractTest.php', 'FormatterRstTest.php', 'FormatterTest.php', 'HelperTest.php', 'ParametersTest.php', 'PhpDocTest.php', 'PhpSphinxTest.php', 'RegexBuilderTest.php', 'TokenizerTest.php', 'folderfile1.php', 'rootfile1.php', 'rootfile2.php', 'subfolderfile1.php' );
+		$expected = array( 'BaseTest.php', 'DirListTest.php', 'DocblockExtractTest.php', 'FormatterRstTest.php', 'HelperTest.php', 'ParametersTest.php', 'PhpDocTest.php', 'PhpSphinxTest.php', 'RegexBuilderTest.php', 'TokenizerTest.php', 'folderfile1.php', 'rootfile1.php', 'rootfile2.php', 'subfolderfile1.php' );
 		self::assertEquals( $expected, $result, 'test_scandirrecursive_1' );
 
 		// 2/ Empty directory means nothing is scanned. Specifically testing this to make sure it is not understood as relative path (i.e. scan current directory).
