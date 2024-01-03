@@ -2,7 +2,8 @@
 /**
  * File for class DocblockExtract.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -10,7 +11,7 @@ declare(strict_types=1);
 namespace TMD\Documentation;
 
 /**
- * The DocblockExtract class extract docblocks from a PHP source file.
+ * The DocblockExtract class extracts docblocks from a tokenized PHP file.
  *
  * @psalm-type CodeObject = array{type: string, name: string, docblock: string, params?: list<string>}
  * @psalm-type CodeHierarchy = list<CodeObject>
@@ -19,11 +20,11 @@ namespace TMD\Documentation;
  */
 class DocblockExtract {
 	/**
-	 * Undocumented function
+	 * Return a new associative array that represents a single object in the code.
 	 *
-	 * @param string $type     Type.
-	 * @param string $name     Name.
-	 * @param string $docblock DocBlock.
+	 * @param string $type     Object type.
+	 * @param string $name     Object name.
+	 * @param string $docblock Object DocBlock.
 	 *
 	 * @return CodeObject
 	 */
@@ -36,11 +37,21 @@ class DocblockExtract {
 	}
 
 	/**
-	 * Undocumented function
+	 * Create a code hierarchy out of tokenized PHP file.
 	 *
-	 * @param TokensList $tokens          Tokens.
-	 * @param string     $class_name      Class name.
-	 * @param string     &$last_namespace Last namespace.
+	 * This methods implements a loop (working in "modes") that gathers the information from the flat list of tokens and groups them into objects.
+	 *
+	 * An object is anything like a class definition, function, etc., that is normally preceded by its docblock comment.
+	 *
+	 * Also it collects namespace and class name, that's what the other two parameters are for.
+	 *
+	 * @todo Model situation: if there is a class definition and after that definition there is a function, that function will be considered here a part of the class.
+	 * Because currently the class name is a flag that never goes down once up and the tokens list parser just works in that loop.
+	 * It certainly needs a better parser (maybe to read the whole list and organize it hierarchically first to understand the whole structure).
+	 *
+	 * @param TokensList $tokens         Tokens.
+	 * @param string     $class_name     Class name.
+	 * @param string     $last_namespace Last namespace.
 	 *
 	 * @return CodeHierarchy
 	 */

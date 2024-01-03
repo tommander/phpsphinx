@@ -2,7 +2,8 @@
 /**
  * File for class Tokenizer.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -17,7 +18,7 @@ namespace TMD\Documentation;
  */
 class Tokenizer {
 	/**
-	 * Undocumented function
+	 * Reads a PHP file and returns an array of tokens of that file.
 	 *
 	 * @param string $file File.
 	 *

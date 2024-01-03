@@ -2,7 +2,8 @@
 /**
  * File for class Helper.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -14,7 +15,7 @@ namespace TMD\Documentation;
  */
 class Helper {
 	/**
-	 * Undocumented function
+	 * Stringify the input.
 	 *
 	 * @param mixed $input Input.
 	 *
@@ -31,7 +32,7 @@ class Helper {
 	}
 
 	/**
-	 * Undocumented function
+	 * Glue each element together into a path.
 	 *
 	 * @param string ...$path_elements Path elements.
 	 *
@@ -59,7 +60,7 @@ class Helper {
 	}
 
 	/**
-	 * Undocumented function
+	 * Retrieve filename from the path.
 	 *
 	 * @param string $path Path.
 	 *
@@ -96,7 +97,7 @@ class Helper {
 	}
 
 	/**
-	 * Undocumented function
+	 * Secure the string to be a valid filename.
 	 *
 	 * @param string $dirty_filename Filename.
 	 *

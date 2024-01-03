@@ -1,8 +1,9 @@
 <?php
 /**
- * SOMECLASS Test.
+ * File for class SOMECLASSTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\SOMECLASS;
 
 /**
- * Undocumented class
+ * Test class for SOMECLASS.
  */
 final class SOMECLASSTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * SOMECLASS instance.
 	 *
 	 * @var SOMECLASS|null
 	 */
 	private ?SOMECLASS $CLASSINSTANCE = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of SOMECLASS.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class SOMECLASSTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of SOMECLASS.
 	 *
 	 * @return void
 	 */
@@ -42,7 +43,7 @@ final class SOMECLASSTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `FUNCTIONNAME`.
 	 *
 	 * @return void
 	 */
@@ -66,7 +67,7 @@ final class SOMECLASSTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `FUNCTIONNAME`.
 	 *
 	 * @return void
 	 */

@@ -1,8 +1,9 @@
 <?php
 /**
- * Parameters Test.
+ * File for class ParametersTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\Parameters;
 
 /**
- * Undocumented class
+ * Test class for Parameters.
  */
 final class ParametersTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * Parameters instance.
 	 *
 	 * @var Parameters|null
 	 */
 	private ?Parameters $parameters = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of Parameters.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class ParametersTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of Parameters.
 	 *
 	 * @return void
 	 */
@@ -42,7 +43,7 @@ final class ParametersTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `prepare_params`.
 	 *
 	 * @return void
 	 */

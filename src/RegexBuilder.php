@@ -2,7 +2,8 @@
 /**
  * File for class RegexBuilder.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,6 +14,8 @@ use Exception;
 
 /**
  * Class for regex building features.
+ *
+ * We basically have here some patterns that are used e.g. to check correct value in DocBlock fields.
  */
 class RegexBuilder {
 	public const RE_URL = '(?:(?:[A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)(?:(?:\/[\+~%\/.\w_-]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[.\!\/\\w]*))?';
@@ -35,7 +38,7 @@ class RegexBuilder {
 	public const RE_PATTERN_UD = 'UD';
 
 	/**
-	 * Undocumented function
+	 * Wrap content with a non-capturing group.
 	 *
 	 * @param string $content Content.
 	 *
@@ -46,7 +49,7 @@ class RegexBuilder {
 	}
 
 	/**
-	 * Undocumented function
+	 * Return a prepared pattern as a working regular expression.
 	 *
 	 * @param string $pattern Pattern.
 	 *
@@ -114,32 +117,14 @@ class RegexBuilder {
 	}
 
 	/**
-	 * Undocumented function
+	 * Wraps content in a non-capturing group, if name is not a string, or named capturing group, if name is a string.
 	 *
 	 * @param string|null $name    Name.
-	 * @param string      $content Content.
+	 * @param string      $content Content to group.
 	 *
 	 * @return string
 	 */
 	public static function group( ?string $name, string $content ): string {
 		return ( is_string( $name ) ? '(?<' . $name . '>' : '(?:' ) . $content . ')';
 	}
-
-	/**
-	 * Undocumented function
-	 *
-	 * @param string ...$input Input.
-	 *
-	 * @return string
-	 */
-
-	/*
-	Ppublic static function parse( string ...$input ): string {
-		$res = '';
-		foreach ( $input as $one_input ) {
-			$res .= $one_input;
-		}
-		return $res;
-	}
-	*/
 }

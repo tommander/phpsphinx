@@ -1,8 +1,9 @@
 <?php
 /**
- * DirList Test.
+ * File for DirListTest class.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\DirList;
 
 /**
- * Undocumented class
+ * Test class for DirList.
  */
 final class DirListTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * DirList instance.
 	 *
 	 * @var DirList|null
 	 */
 	private ?DirList $dirlist = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of DirList.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class DirListTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of DirList.
 	 *
 	 * @return void
 	 */
@@ -42,10 +43,7 @@ final class DirListTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
-	 *
-	 * - Error #0 - DirList instance is not initialized.
-	 * - Error #1 - Test "Test something" failed.
+	 * Test of function `scandir_recursive`.
 	 *
 	 * @return void
 	 */

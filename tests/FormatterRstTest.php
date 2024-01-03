@@ -1,8 +1,9 @@
 <?php
 /**
- * FormatterRst Test.
+ * File for class FormatterRstTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\Formatters\FormatterRst;
 
 /**
- * Undocumented class
+ * Test class for FormatterRst.
  */
 final class FormatterRstTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * FormatterRst instance.
 	 *
 	 * @var FormatterRst|null
 	 */
 	private ?FormatterRst $formatterrst = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of FormatterRst.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class FormatterRstTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of FormatterRst.
 	 *
 	 * @return void
 	 */
@@ -42,7 +43,7 @@ final class FormatterRstTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `directive`.
 	 *
 	 * @return void
 	 */
@@ -94,7 +95,7 @@ final class FormatterRstTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `type_to_rst`.
 	 *
 	 * @return void
 	 */
@@ -139,7 +140,7 @@ final class FormatterRstTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `fix_indentation`.
 	 *
 	 * @return void
 	 */
@@ -180,7 +181,7 @@ final class FormatterRstTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `format`.
 	 *
 	 * @return void
 	 */

@@ -2,7 +2,8 @@
 /**
  * File for interface FormatterInterface.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -18,7 +19,7 @@ use TMD\Documentation\Formatters\{FormatterRst, FormatterHtml};
  */
 interface FormatterInterface {
 	/**
-	 * Hello.
+	 * List of available formats (as class refs) along with some metadata.
 	 *
 	 * @var array<string, array{ext: string, desc: string, class: class-string<FormatterInterface>}>
 	 */
@@ -41,32 +42,32 @@ interface FormatterInterface {
 	);
 
 	/**
-	 * Undocumented function
+	 * Turns a code hierarchy into a single FORMAT file.
 	 *
-	 * @param string        $title     Title.
-	 * @param CodeHierarchy $hierarchy Hierarchy.
-	 * @param string        $commit    Commit.
-	 * @param string        $file_rel  File rel.
+	 * @param string        $title     Title of the document.
+	 * @param CodeHierarchy $hierarchy Input code hierarchy.
+	 * @param string        $commit    Current commit.
+	 * @param string        $file_rel  Path to the original PHP file, relative to repo root.
 	 *
 	 * @return string
 	 */
 	public static function format( string $title, array $hierarchy, string $commit = '', string $file_rel = '' ): string; // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 
 	/**
-	 * Undocumented function
+	 * Returns a "Generated Automatically" badge that is included in every file.
 	 *
-	 * @param string $date   Date.
-	 * @param string $commit Commit.
-	 * @param string $file   File.
+	 * @param string $date   Current date.
+	 * @param string $commit Current commit.
+	 * @param string $file   Current PHP file.
 	 *
 	 * @return string
 	 */
 	public static function generated_automatically( string $date, string $commit, string $file ): string;
 
 	/**
-	 * Undocumented function
+	 * Substite placeholders in a template with real content.
 	 *
-	 * @param string $text         Text.
+	 * @param string $text         Subject text.
 	 * @param string $before_toc   Before ToC.
 	 * @param string $after_toc    After ToC.
 	 * @param string $start_of_toc Start of ToC.
@@ -77,26 +78,26 @@ interface FormatterInterface {
 	public static function substitute( string $text, string $before_toc, string $after_toc, string $start_of_toc, string $end_of_toc ): string;
 
 	/**
-	 * Undocumented function
+	 * Returns a folder index template.
 	 *
-	 * @param string $title Title.
+	 * @param string $title Title of the document.
 	 *
 	 * @return string
 	 */
 	public static function get_empty_index( string $title = '' ): string;
 
 	/**
-	 * Undocumented function
+	 * Adds a file reference to the index.
 	 *
-	 * @param string $what            What.
-	 * @param string $subfolder_index Subfolder index.
+	 * @param string $what            What to add.
+	 * @param string $subfolder_index Folder index content.
 	 *
 	 * @return string
 	 */
 	public static function add_to_index( string $what, string $subfolder_index ): string;
 
 	/**
-	 * Returns a representation of this instance of PhpDoc in a specific format.
+	 * Returns a representation of the referenced PhpDoc instance in FORMAT.
 	 *
 	 * @param \TMD\Documentation\PhpDoc $phpdoc PHPDoc.
 	 *

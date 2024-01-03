@@ -1,8 +1,9 @@
 <?php
 /**
- * RegexBuilder Test.
+ * File for class RegexBuilderTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\RegexBuilder;
 
 /**
- * Undocumented class
+ * Test class for RegexBuilder.
  */
 final class RegexBuilderTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * RegexBuilder instance.
 	 *
 	 * @var RegexBuilder|null
 	 */
 	private ?RegexBuilder $regexbuilder = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of RegexBuilder.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class RegexBuilderTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of RegexBuilder.
 	 *
 	 * @return void
 	 */
@@ -42,7 +43,7 @@ final class RegexBuilderTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `optional`.
 	 *
 	 * @return void
 	 */
@@ -61,7 +62,7 @@ final class RegexBuilderTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `pattern`.
 	 *
 	 * @return void
 	 */
@@ -86,7 +87,7 @@ final class RegexBuilderTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `group`.
 	 *
 	 * @return void
 	 */

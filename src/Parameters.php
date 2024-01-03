@@ -2,7 +2,8 @@
 /**
  * File for class Parameters.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -12,17 +13,17 @@ namespace TMD\Documentation;
 use TMD\Documentation\Interfaces\FormatterInterface;
 
 /**
- * The Parameters class prepares program parameters.
+ * The Parameters class prepares and validates program parameters.
  */
 class Parameters {
 	/**
-	 * Undocumented variable
+	 * Short parameters.
 	 *
 	 * @var string
 	 */
 	public string $short_params = 'h';
 	/**
-	 * Undocumented variable
+	 * Long parameters.
 	 *
 	 * @var array
 	 */
@@ -34,19 +35,19 @@ class Parameters {
 		'version',
 	);
 	/**
-	 * Undocumented variable
+	 * List of parameters with their (optional) value.
 	 *
 	 * @var array
 	 */
 	public array $params = array();
 
 	/**
-	 * Undocumented function
+	 * Get parameters, evaluate them and decide the next action.
 	 *
-	 * @param array|null $opts_override Opts override.
-	 * @param callable   $before        Before.
+	 * @param array|null $opts_override Read options from here instead of `getopt()`.
+	 * @param callable   $before        Callback that is triggered before checking starts, but after parameters are read.
 	 *
-	 * @return bool|string
+	 * @return bool|string String is always an error message, `false` is an unknown error and `true` is success.
 	 */
 	public function prepare_params( array|null $opts_override = null, callable $before = null ): bool|string {
 		// Parse script options.

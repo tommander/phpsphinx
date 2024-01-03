@@ -1,8 +1,9 @@
 <?php
 /**
- * File for class FileMap.
+ * File for class FormatterHtml.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -14,14 +15,14 @@ use TMD\Documentation\Interfaces\FormatterInterface;
 use TMD\Documentation\PhpDoc;
 
 /**
- * The FileMap class represents a custom map of PHP source file.
+ * The FormatterHtml class transform code hierarchy into an HTML.
  *
  * @psalm-import-type FileIndex from \TMD\Documentation\PhpSphinx
  * @psalm-import-type CodeHierarchy from \TMD\Documentation\DocblockExtract
  */
 class FormatterHtml implements FormatterInterface {
 	/**
-	 * Hello.
+	 * HTML templates for Docblock tags.
 	 *
 	 * @var array<string, string>
 	 */
@@ -61,7 +62,7 @@ class FormatterHtml implements FormatterInterface {
 	);
 
 	/**
-	 * Undocumented function
+	 * Renders a code hierarchy item as HTML.
 	 *
 	 * @param string $type    Type.
 	 * @param string $name    Name.
@@ -72,101 +73,19 @@ class FormatterHtml implements FormatterInterface {
 	public static function type_to_html( string $type, string $name, string $content ): string {
 		$type_lower = strtolower( trim( $type ) );
 		return "<div class=\"design design_$type_lower\"><div class=\"name\">$name</div><div class=\"content\">$content</div></div>";
-
-		/*
-		Iif ( 'attr' === $type_lower ) {
-			$directive = self::DIRECTIVE_ATTR;
-		}
-		if ( 'case' === $type_lower ) {
-			$directive = self::DIRECTIVE_CASE;
-		}
-		if ( 'class' === $type_lower ) {
-			$directive = self::DIRECTIVE_CLASS;
-		}
-		if ( 'const' === $type_lower ) {
-			$directive = self::DIRECTIVE_CONST;
-		}
-		if ( 'enum' === $type_lower ) {
-			$directive = self::DIRECTIVE_ENUM;
-		}
-		if ( 'exception' === $type_lower ) {
-			$directive = self::DIRECTIVE_EXCEPTION;
-		}
-		if ( 'function' === $type_lower ) {
-			$directive = self::DIRECTIVE_FUNCTION;
-		}
-		if ( 'global' === $type_lower ) {
-			$directive = self::DIRECTIVE_GLOBAL;
-		}
-		if ( 'interface' === $type_lower ) {
-			$directive = self::DIRECTIVE_INTERFACE;
-		}
-		if ( 'namespace' === $type_lower ) {
-			$directive = self::DIRECTIVE_NAMESPACE;
-		}
-		if ( 'method' === $type_lower ) {
-			$directive = self::DIRECTIVE_METHOD;
-		}
-		if ( 'staticmethod' === $type_lower ) {
-			$directive = self::DIRECTIVE_STATICMETHOD;
-		}
-		if ( 'trait' === $type_lower ) {
-			$directive = self::DIRECTIVE_TRAIT;
-		}
-		if ( 'var' === $type_lower ) {
-			$directive = self::DIRECTIVE_ATTR;
-		}
-		if ( '' === $directive ) {
-			return $content;
-		}
-		return self::directive( $directive, $name, $content ) ?? '';
-		*/
 	}
 
 	/**
-	 * Undocumented function
+	 * Turns a code hierarchy into a single HTML file.
 	 *
-	 * @param string $text       Text.
-	 * @param int    $min_indent Min indent.
-	 *
-	 * @return string
-	 */
-	public static function fix_indentation( string $text, int $min_indent ): string {
-		if ( $min_indent <= 0 ) {
-			return $text;
-		}
-		return preg_replace(
-			'/^\s+$/',
-			'',
-			preg_replace(
-				sprintf(
-					'/^ {0,%d}([^ \n\r\0])/m',
-					( $min_indent * 3 ) - 1
-				),
-				sprintf(
-					'%s$1',
-					str_repeat( '   ', $min_indent )
-				),
-				$text
-			)
-		);
-	}
-
-
-	/**
-	 * Undocumented function
-	 *
-	 * @param string        $title     Title.
-	 * @param CodeHierarchy $hierarchy Hierarchy.
-	 * @param string        $commit    Commit.
-	 * @param string        $file_rel  File rel.
+	 * @param string        $title     Title of the document.
+	 * @param CodeHierarchy $hierarchy Input code hierarchy.
+	 * @param string        $commit    Current commit.
+	 * @param string        $file_rel  Path to the original PHP file, relative to repo root.
 	 *
 	 * @return string
 	 */
 	public static function format( string $title, array $hierarchy, string $commit = '', string $file_rel = '' ): string { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
-		$underline = str_repeat( '=', strlen( $title ) );
-		$indent = 0;
-
 		$file_template_path = Helper::make_path( __DIR__, '..', '..', 'templates', 'html', 'file.html' );
 		$file_template = '';
 		if ( file_exists( $file_template_path ) === true ) {
@@ -185,26 +104,22 @@ class FormatterHtml implements FormatterInterface {
 				$phpdoc->docblock = "<?php\n" . $hier_docblock;
 				$phpdoc->parse();
 				$hier_rst = self::output_str( $phpdoc );
-				$hierarchy_content .= self::fix_indentation( self::type_to_html( $hier_type, $hier_name, self::fix_indentation( $hier_rst, $indent + 1 ) ), $indent ) . PHP_EOL;
-			}
-			if ( in_array( $hier_type, array( 'class', 'interface', 'trait' ) ) ) {
-				$indent = 1;
+				$hierarchy_content .= self::type_to_html( $hier_type, $hier_name, $hier_rst, ) . PHP_EOL;
 			}
 		}
 		$file_content = self::substitute( $file_template, '', self::generated_automatically( gmdate( 'c' ), $commit, $file_rel ), $hierarchy_content, '' );
 		return sprintf(
 			$file_content,
-			$title,
-			$underline
+			$title
 		);
 	}
 
 	/**
-	 * Undocumented function
+	 * Returns a "Generated Automatically" badge that is included in every file.
 	 *
-	 * @param string $date   Date.
-	 * @param string $commit Commit.
-	 * @param string $file   File.
+	 * @param string $date   Current date.
+	 * @param string $commit Current commit.
+	 * @param string $file   Current PHP file.
 	 *
 	 * @return string
 	 */
@@ -238,9 +153,9 @@ class FormatterHtml implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Returns a folder index template.
 	 *
-	 * @param string $title Title.
+	 * @param string $title Title of the document.
 	 *
 	 * @return string
 	 */
@@ -263,10 +178,10 @@ class FormatterHtml implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Adds a file reference to the index.
 	 *
-	 * @param string $what            What.
-	 * @param string $subfolder_index Subfolder index.
+	 * @param string $what            What to add.
+	 * @param string $subfolder_index Folder index content.
 	 *
 	 * @return string
 	 */
@@ -275,9 +190,9 @@ class FormatterHtml implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Substite placeholders in a template with real content.
 	 *
-	 * @param string $text         Text.
+	 * @param string $text         Subject text.
 	 * @param string $before_toc   Before ToC.
 	 * @param string $after_toc    After ToC.
 	 * @param string $start_of_toc Start of ToC.
@@ -294,7 +209,7 @@ class FormatterHtml implements FormatterInterface {
 	}
 
 	/**
-	 * Returns a representation of this instance of PhpDoc in restructuredText.
+	 * Returns a representation of the referenced PhpDoc instance in HTML.
 	 *
 	 * @param \TMD\Documentation\PhpDoc $phpdoc PHPDoc.
 	 *

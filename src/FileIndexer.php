@@ -2,7 +2,8 @@
 /**
  * File for class FileIndexer.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -12,18 +13,18 @@ namespace TMD\Documentation;
 use TMD\Documentation\Interfaces\FormatterInterface;
 
 /**
- * Class for directory listing features.
+ * Class for creating folder indices.
  */
 class FileIndexer {
 	/**
-	 * Hello.
+	 * This holds the data of indices content. Array key is the subfolder name ("." in case of root folder), array value is a list of file names in that subfolder (non-recursively).
 	 *
 	 * @var array<string, list<string>>
 	 */
 	public array $data = array();
 
 	/**
-	 * Undocumented function
+	 * Start collecting data about indices.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ class FileIndexer {
 	}
 
 	/**
-	 * Undocumented function
+	 * Add a file to a subfolder. The subfolder key is added if it does not exist.
 	 *
 	 * @param string $index Index.
 	 * @param string $file  File.
@@ -48,14 +49,14 @@ class FileIndexer {
 	}
 
 	/**
-	 * Undocumented function
+	 * Finish collecting files for indices and save all indices to files.
 	 *
-	 * @param class-string<FormatterInterface> $formatter_intf FormatterInterface.
-	 * @param array<string>                    $namespace_list Namespace list.
-	 * @param string                           $commit         Commit.
-	 * @param bool                             $dry_run        Dry run.
-	 * @param string                           $outputdir      Outputdir.
-	 * @param string                           $format         Format.
+	 * @param class-string<FormatterInterface> $formatter_intf Formatter that is used to output files (a FormatterInterface descendant class name).
+	 * @param array<string>                    $namespace_list List of namespaces (subfolders in the build output folder).
+	 * @param string                           $commit         Current commit.
+	 * @param bool                             $dry_run        If `true`, files will not be saved. Otherwise all stays the same.
+	 * @param string                           $outputdir      Output directory.
+	 * @param string                           $format         Format (rst,md,html).
 	 *
 	 * @return void
 	 */

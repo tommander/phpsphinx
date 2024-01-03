@@ -1,8 +1,9 @@
 <?php
 /**
- * Helper Test.
+ * File for class HelperTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -14,11 +15,11 @@ use Stringable;
 use TMD\Documentation\Helper;
 
 /**
- * Undocumented class
+ * Test class for Helper.
  */
 final class HelperTest extends BaseTest {
 	/**
-	 * Undocumented function
+	 * Test of function `make_string`.
 	 *
 	 * @return void
 	 */
@@ -82,7 +83,7 @@ final class HelperTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `make_path`.
 	 *
 	 * @return void
 	 */
@@ -117,7 +118,7 @@ final class HelperTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `get_filename`.
 	 *
 	 * @return void
 	 */
@@ -160,7 +161,7 @@ final class HelperTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `relative_path`.
 	 *
 	 * @return void
 	 */

@@ -1,8 +1,9 @@
 <?php
 /**
- * PhpSphinx Test.
+ * File for class PhpSphinxTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -14,18 +15,18 @@ use TMD\Documentation\Helper;
 use TMD\Documentation\PhpSphinx;
 
 /**
- * Undocumented class
+ * Test class for PhpSphinx.
  */
 final class PhpSphinxTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * PhpSphinx instance.
 	 *
 	 * @var PhpSphinx|null
 	 */
 	private ?PhpSphinx $phpsphinx = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of PhpSphinx.
 	 *
 	 * @return void
 	 */
@@ -34,7 +35,7 @@ final class PhpSphinxTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of PhpSphinx.
 	 *
 	 * @return void
 	 */
@@ -43,7 +44,7 @@ final class PhpSphinxTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `do_run`.
 	 *
 	 * @return void
 	 */
@@ -108,7 +109,7 @@ final class PhpSphinxTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `generate_documentation`.
 	 *
 	 * @return void
 	 */

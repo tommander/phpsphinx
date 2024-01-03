@@ -1,8 +1,9 @@
 <?php
 /**
- * DirList Test.
+ * File for BaseTest class.
  *
- * @package Huja.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -12,7 +13,7 @@ namespace TMD\Documentation\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Undocumented class
+ * Common class for tests.
  */
 abstract class BaseTest extends TestCase {
 }

@@ -1,8 +1,9 @@
 <?php
 /**
- * Tokenizer Test.
+ * File for class TokenizerTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\Tokenizer;
 
 /**
- * Undocumented class
+ * Test class for Tokenizer.
  */
 final class TokenizerTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * Tokenizer instance.
 	 *
 	 * @var Tokenizer|null
 	 */
 	private ?Tokenizer $tokenizer = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of Tokenizer.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class TokenizerTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of Tokenizer.
 	 *
 	 * @return void
 	 */
@@ -42,7 +43,7 @@ final class TokenizerTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `tokenize_file`.
 	 *
 	 * @return void
 	 */

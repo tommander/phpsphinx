@@ -2,7 +2,8 @@
 /**
  * File for class DirList.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -28,8 +29,8 @@ class DirList {
 	 *    // );
 	 *
 	 * @param string     $directory Directory to scan.
-	 * @param RegexArray $include Array of regexes that files have to match.
-	 * @param RegexArray $exclude Array of regexes that files have to not match.
+	 * @param RegexArray $include   Array of regexes that files have to match.
+	 * @param RegexArray $exclude   Array of regexes that files have to not match.
 	 *
 	 * @return SplFileInfoArray List of file info for all files found.
 	 */

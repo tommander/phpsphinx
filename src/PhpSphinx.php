@@ -1,8 +1,9 @@
 <?php
 /**
- * Undocumented.
+ * File for class PhpSphinx.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -19,7 +20,7 @@ use TMD\Documentation\Formatters\FormatterRst;
  */
 class PhpSphinx {
 	/**
-	 * Undocumented variable
+	 * Help text to show in command-line.
 	 *
 	 * @var string
 	 */
@@ -43,51 +44,51 @@ class PhpSphinx {
 	  format   Output file format. One of: rst,md,html.
 	EOS;
 	/**
-	 * Undocumented variable
+	 * App version.
 	 *
 	 * @var string
 	 */
 	public static string $version_text = 'v0.1.0';
 	/**
-	 * Undocumented variable
+	 * App name.
 	 *
 	 * @var string
 	 */
 	public static string $name_text = 'PHPSphinx';
 
 	/**
-	 * Undocumented variable
+	 * DirList instance.
 	 *
 	 * @var DirList
 	 */
 	private DirList $dir_list;
 	/**
-	 * Undocumented variable
+	 * DocblockExtract instance.
 	 *
 	 * @var DocblockExtract
 	 */
 	private DocblockExtract $docblock_extract;
 	/**
-	 * Undocumented variable
+	 * Parameters instance.
 	 *
 	 * @var Parameters
 	 */
 	private Parameters $parameters;
 	/**
-	 * Undocumented variable
+	 * Tokenizer instance.
 	 *
 	 * @var Tokenizer
 	 */
 	private Tokenizer $tokenizer;
 	/**
-	 * Undocumented variable
+	 * FileIndexer instance.
 	 *
 	 * @var FileIndexer
 	 */
 	private FileIndexer $fileindexer;
 
 	/**
-	 * Undocumented function
+	 * Constructor.
 	 */
 	public function __construct() {
 		$this->dir_list = new DirList();
@@ -98,7 +99,7 @@ class PhpSphinx {
 	}
 
 	/**
-	 * Undocumented function
+	 * Echo text and send end-of-line.
 	 *
 	 * @param string $text Text.
 	 *
@@ -110,9 +111,9 @@ class PhpSphinx {
 	}
 
 	/**
-	 * Undocumented function
+	 * Check parameters that just show some text and exit (help and version).
 	 *
-	 * @return bool
+	 * @return bool `false` in case a text was shown and the program should exit, `true` otherwise.
 	 */
 	public function pre_param_check(): bool {
 		// No options => show help.
@@ -140,10 +141,10 @@ class PhpSphinx {
 	}
 
 	/**
-	 * Undocumented function
+	 * Entrypoint for the app.
 	 *
-	 * @param array|null $opts_override Opts override.
-	 * @param bool       $dry_run       Dry run.
+	 * @param array|null $opts_override Options used by the app should be these instead of from `getopt()`.
+	 * @param bool       $dry_run       If `true`, no file will be saved.
 	 *
 	 * @return void
 	 */
@@ -169,7 +170,9 @@ class PhpSphinx {
 	}
 
 	/**
-	 * Undocumented function
+	 * Return current commit.
+	 *
+	 * Reading `/.git/HEAD` for reference and getting that reference for commit number.
 	 *
 	 * @return string|false
 	 */
@@ -196,12 +199,12 @@ class PhpSphinx {
 	}
 
 	/**
-	 * Undocumented function
+	 * Generates documentation with the given input.
 	 *
-	 * @param string $format    Format.
-	 * @param string $inputdir  Inputdir.
-	 * @param string $outputdir Outputdir.
-	 * @param bool   $dry_run   Dry run.
+	 * @param string $format    Format (rst,md,html).
+	 * @param string $inputdir  Input directory with PHP source files and inline docs.
+	 * @param string $outputdir Output directory for documentation.
+	 * @param bool   $dry_run   If `true`, no file will be saved.
 	 *
 	 * @return void
 	 */

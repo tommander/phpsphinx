@@ -1,8 +1,9 @@
 <?php
 /**
- * DocblockExtract Test.
+ * File for class DocblockExtractTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\DocblockExtract;
 
 /**
- * Undocumented class
+ * Test class for DocblockExtract.
  */
 final class DocblockExtractTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * DocblockExtract instance.
 	 *
 	 * @var DocblockExtract|null
 	 */
 	private ?DocblockExtract $docblockextract = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of DocblockExtract.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class DocblockExtractTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of DocblockExtract.
 	 *
 	 * @return void
 	 */
@@ -42,7 +43,7 @@ final class DocblockExtractTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `code_object`.
 	 *
 	 * @return void
 	 */
@@ -79,7 +80,7 @@ final class DocblockExtractTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `get_code_hierarchy`.
 	 *
 	 * @return void
 	 */

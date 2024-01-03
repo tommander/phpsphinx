@@ -2,7 +2,8 @@
 /**
  * File for class PhpDoc.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -36,7 +37,6 @@ class PhpDoc implements \Stringable {
 	 * * `regex` (*string*) RegEx that is used to parse the attribute value
 	 * * `fields` (*array*) Array of field names that are used in the regex and can be referenced in the output RST
 	 * * `value` (*bool|array*) Value of the tag. For flag tags, it's either true or false, for the rest it's an array of arrays.
-	 * * `rst` (*string*) Format string for restructedText output.
 	 *
 	 * @var DocblockData
 	 */
@@ -87,7 +87,7 @@ class PhpDoc implements \Stringable {
 			'value' => false,
 		),
 		'global' => array(
-			'regex' => 'TND', // '/(?<type>\S+)\s+(?<name>\$\S+)?(?<desc>.*)/',
+			'regex' => 'TND',
 			'fields' => array( 'type', 'name', 'desc' ),
 			'value' => array(),
 		),
@@ -203,14 +203,14 @@ class PhpDoc implements \Stringable {
 		),
 	);
 	/**
-	 * Undocumented variable
+	 * PhpDoc instance data.
 	 *
 	 * @var DocblockData
 	 */
 	public array $data = self::CLEAN_DATA;
 
 	/**
-	 * Undocumented function
+	 * Clear the instance data.
 	 *
 	 * @return void
 	 */
@@ -220,22 +220,8 @@ class PhpDoc implements \Stringable {
 		$this->description = '';
 	}
 
-	// /**
-	// * Simple static function to get a docblock content and parse it to restructedText.
-	// *
-	// * @param string $input Input DocBlock (starting with `<?php /**`).
-	// *
-	// * @return string
-	// */
-	// public static function docblock_to_rst( string $input ): string {
-	// $instance = new self();
-	// $instance->docblock = $input;
-	// $instance->parse();
-	// return $instance->toRst();
-	// }
-
 	/**
-	 * Replace special placeholders in the text
+	 * Replace special placeholders in the text.
 	 *
 	 * A placeholder is `%%-xxx-%%`, where `xxx` is at least one instance of an alphanumeric characters, underscore or dash.
 	 *

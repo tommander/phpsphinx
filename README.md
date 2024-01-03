@@ -25,7 +25,7 @@ php /path/to/phpsphinx/index.php --version
 
 ## Example
 
-This project uses itself and Sphinx to generate its own code documentation.
+This project uses itself and Sphinx to generate its own code documentation that is available on GitHub Pages.
 
 1. Empty folder `/docs/source/api`
 2. Generate RST documentation in `/docs/source/api`
@@ -73,7 +73,7 @@ Please track in [GitHub Issues](https://github.com/tommander/phpsphinx/issues).
 
 ## Documentation
 
-[Generated documentation](https://tommander.github.io/phpsphinx/).
+[Documentation on GitHub Pages](https://tommander.github.io/phpsphinx/).
 
 ## License
 

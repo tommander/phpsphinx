@@ -1,8 +1,9 @@
 <?php
 /**
- * Un.
+ * Main entrypoint to PhpSphinx application.
  *
- * @package Hu
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);

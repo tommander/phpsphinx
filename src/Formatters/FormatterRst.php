@@ -1,8 +1,9 @@
 <?php
 /**
- * File for class FileMap.
+ * File for class FormatterRst.
  *
- * @package Documentation
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -14,7 +15,7 @@ use TMD\Documentation\Interfaces\FormatterInterface;
 use TMD\Documentation\PhpDoc;
 
 /**
- * The FileMap class represents a custom map of PHP source file.
+ * The FormatterHtml class transform code hierarchy into a restructuredText.
  *
  * @psalm-import-type FileIndex from \TMD\Documentation\PhpSphinx
  * @psalm-import-type CodeHierarchy from \TMD\Documentation\DocblockExtract
@@ -47,7 +48,7 @@ class FormatterRst implements FormatterInterface {
 	public const REFERENCE_TRAIT = 'php:trait';
 
 	/**
-	 * Hello.
+	 * RST templates for Docblock tags.
 	 *
 	 * @var array<string, string>
 	 */
@@ -87,19 +88,13 @@ class FormatterRst implements FormatterInterface {
 	);
 
 	/**
-	 * Undocumented function
+	 * Returns a properly indented directive with its content.
 	 *
-	 * This directive declares a new PHP namespace. It accepts nested namespaces by separating
-	 * namespaces with `\\`. It does not generate any content like {@see php:class} does. It will however,
-	 * generate an entry in the namespace/module index.
-	 *
-	 * It has `synopsis` and `deprecated` options, similar to **py:module**.
-	 *
-	 * @param string $directive Directive.
-	 * @param string $name      Name.
+	 * @param string $directive Directive name.
+	 * @param string $name      Name of the section.
 	 * @param string $content   Content.
-	 * @param int    $level     Level.
-	 * @param bool   $return    Return.
+	 * @param int    $level     Level of indentation (0 = none, 1 = 3 spaces, 2 = 6 spaces etc.).
+	 * @param bool   $return    Return (`true`) the value or echo (`false`).
 	 *
 	 * @return string|void
 	 */
@@ -123,7 +118,7 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Renders a code hierarchy item as restructuredText (a directive).
 	 *
 	 * @param string $type    Type.
 	 * @param string $name    Name.
@@ -183,10 +178,10 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Each line of the input string will be ensured to start with at least `$min_indent * 3` spaces.
 	 *
-	 * @param string $text       Text.
-	 * @param int    $min_indent Min indent.
+	 * @param string $text       Input text.
+	 * @param int    $min_indent Minimum indentation level (non-positive value will cause this function to just return `$text`).
 	 *
 	 * @return string
 	 */
@@ -212,12 +207,12 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Turns a code hierarchy into a single RST file.
 	 *
-	 * @param string        $title     Title.
-	 * @param CodeHierarchy $hierarchy Hierarchy.
-	 * @param string        $commit    Commit.
-	 * @param string        $file_rel  File rel.
+	 * @param string        $title     Title of the document.
+	 * @param CodeHierarchy $hierarchy Input code hierarchy.
+	 * @param string        $commit    Current commit.
+	 * @param string        $file_rel  Path to the original PHP file, relative to repo root.
 	 *
 	 * @return string
 	 */
@@ -258,11 +253,11 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Returns a "Generated Automatically" badge that is included in every file.
 	 *
-	 * @param string $date   Date.
-	 * @param string $commit Commit.
-	 * @param string $file   File.
+	 * @param string $date   Current date.
+	 * @param string $commit Current commit.
+	 * @param string $file   Current PHP file.
 	 *
 	 * @return string
 	 */
@@ -296,9 +291,9 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Returns a folder index template.
 	 *
-	 * @param string $title Title.
+	 * @param string $title Title of the document.
 	 *
 	 * @return string
 	 */
@@ -321,10 +316,10 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Adds a file reference to the index.
 	 *
-	 * @param string $what            What.
-	 * @param string $subfolder_index Subfolder index.
+	 * @param string $what            What to add.
+	 * @param string $subfolder_index Folder index content.
 	 *
 	 * @return string
 	 */
@@ -333,9 +328,9 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Undocumented function
+	 * Substite placeholders in a template with real content.
 	 *
-	 * @param string $text         Text.
+	 * @param string $text         Subject text.
 	 * @param string $before_toc   Before ToC.
 	 * @param string $after_toc    After ToC.
 	 * @param string $start_of_toc Start of ToC.
@@ -352,7 +347,7 @@ class FormatterRst implements FormatterInterface {
 	}
 
 	/**
-	 * Returns a representation of this instance of PhpDoc in restructuredText.
+	 * Returns a representation of the referenced PhpDoc instance in restructuredText.
 	 *
 	 * @param \TMD\Documentation\PhpDoc $phpdoc PHPDoc.
 	 *

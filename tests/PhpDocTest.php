@@ -1,8 +1,9 @@
 <?php
 /**
- * PhpDoc Test.
+ * File for class PhpDocTest.
  *
- * @package Fejz.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
@@ -13,18 +14,18 @@ use PHPUnit\Framework\TestCase;
 use TMD\Documentation\PhpDoc;
 
 /**
- * Undocumented class
+ * Test class for PhpDoc.
  */
 final class PhpDocTest extends BaseTest {
 	/**
-	 * Undocumented variable
+	 * PhpDoc instance.
 	 *
 	 * @var PhpDoc|null
 	 */
 	private ?PhpDoc $phpdoc = null;
 
 	/**
-	 * Undocumented function
+	 * Test setup - create new instance of PhpDoc.
 	 *
 	 * @return void
 	 */
@@ -33,7 +34,7 @@ final class PhpDocTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test teardown - free the instance of PhpDoc.
 	 *
 	 * @return void
 	 */
@@ -42,24 +43,7 @@ final class PhpDocTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
-	 *
-	 * @return void
-	 */
-	// public function testDocblockToRst(): void {
-	// if ( is_a( $this->phpdoc, PhpDoc::class ) !== true ) {
-	// self::fail( 'test_docblocktorst_0' );
-	// return;
-	// }
-	// // 1/ Empty.
-	// $input = '';
-	// $expected = PHP_EOL;
-	// $result = PhpDoc::docblock_to_rst( $input );
-	// self::assertEquals( $expected, $result, 'test_docblocktorst_1' );
-	// }.
-
-	/**
-	 * Undocumented function
+	 * Test of function `replace`.
 	 *
 	 * @return void
 	 */
@@ -97,7 +81,7 @@ final class PhpDocTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `parse_tag`.
 	 *
 	 * @return void
 	 */
@@ -149,7 +133,7 @@ final class PhpDocTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `parse_docblock`.
 	 *
 	 * @return void
 	 */
@@ -180,7 +164,7 @@ final class PhpDocTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `parse`.
 	 *
 	 * @return void
 	 */
@@ -198,7 +182,7 @@ final class PhpDocTest extends BaseTest {
 	}
 
 	/**
-	 * Undocumented function
+	 * Test of function `__toString`.
 	 *
 	 * @return void
 	 */

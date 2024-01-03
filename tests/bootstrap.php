@@ -2,7 +2,8 @@
 /**
  * Bootstrap for unit tests.
  *
- * @package Yuzuuu.
+ * @package TMD
+ * @subpackage Documentation
  */
 
 declare(strict_types=1);
