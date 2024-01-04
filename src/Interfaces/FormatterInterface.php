@@ -10,12 +10,13 @@ declare(strict_types=1);
 
 namespace TMD\Documentation\Interfaces;
 
-use TMD\Documentation\Formatters\{FormatterRst, FormatterHtml};
+use TMD\Documentation\{FormatterRst, FormatterHtml};
 
 /**
  * The FormatterInterface represents an abstract formatter of code hierarchy.
  *
  * @psalm-import-type CodeHierarchy from \TMD\Documentation\DocblockExtract
+ * @psalm-import-type DocblockData from \TMD\Documentation\PhpDoc
  */
 interface FormatterInterface {
 	/**
@@ -40,6 +41,25 @@ interface FormatterInterface {
 			'class' => FormatterHtml::class,
 		),
 	);
+
+	/**
+	 * Return a link to a GitHub repo commit.
+	 *
+	 * @param string $commit Commit.
+	 *
+	 * @return string
+	 */
+	public static function commit_link( string $commit ): string;
+
+	/**
+	 * Return a link to a GitHub repo file.
+	 *
+	 * @param string $commit Commit.
+	 * @param string $file   File.
+	 *
+	 * @return string
+	 */
+	public static function file_link( string $commit, string $file ): string;
 
 	/**
 	 * Turns a code hierarchy into a single FORMAT file.
@@ -97,11 +117,12 @@ interface FormatterInterface {
 	public static function add_to_index( string $what, string $subfolder_index ): string;
 
 	/**
-	 * Returns a representation of the referenced PhpDoc instance in FORMAT.
+	 * Returns a representation of the referenced PhpDoc data in restructuredText.
 	 *
-	 * @param \TMD\Documentation\PhpDoc $phpdoc PHPDoc.
+	 * @param string       $description Description.
+	 * @param DocblockData $data        Data.
 	 *
 	 * @return string
 	 */
-	public static function output_str( \TMD\Documentation\PhpDoc $phpdoc ): string;
+	public static function output_str( string $description, array $data ): string; // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 }

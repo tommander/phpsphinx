@@ -18,47 +18,16 @@ use TMD\Documentation\DirList;
  */
 final class DirListTest extends BaseTest {
 	/**
-	 * DirList instance.
-	 *
-	 * @var DirList|null
-	 */
-	private ?DirList $dirlist = null;
-
-	/**
-	 * Test setup - create new instance of DirList.
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		$this->dirlist = new DirList();
-	}
-
-	/**
-	 * Test teardown - free the instance of DirList.
-	 *
-	 * @return void
-	 */
-	protected function tearDown(): void {
-		unset( $this->dirlist );
-	}
-
-	/**
 	 * Test of function `scandir_recursive`.
 	 *
 	 * @return void
 	 */
 	public function testScandirRecursive(): void {
-		// 0/ Check dependencies and prerequisites.
-		if ( is_a( $this->dirlist, DirList::class ) !== true ) {
-			self::fail( 'test_scandirrecursive_0' );
-			return;
-		}
-
 		// 1/ Basic test.
 		$directory = __DIR__;
 		$include = array( '/\.php$/' );
 		$exclude = array( '/bootstrap.php/' );
-		$result_raw = $this->dirlist->scandir_recursive( $directory, $include, $exclude );
+		$result_raw = DirList::scandir_recursive( $directory, $include, $exclude );
 		$result = array();
 		foreach ( $result_raw as $one_result_raw ) {
 			$result[] = $one_result_raw->getPathname();
@@ -75,7 +44,7 @@ final class DirListTest extends BaseTest {
 		$directory = '';
 		$include = array( '/.*/' );
 		$exclude = array();
-		$result = $this->dirlist->scandir_recursive( $directory, $include, $exclude );
+		$result = DirList::scandir_recursive( $directory, $include, $exclude );
 		$expected = array();
 		self::assertEquals( $expected, $result, 'test_scandirrecursive_2' );
 
@@ -83,7 +52,7 @@ final class DirListTest extends BaseTest {
 		$directory = __DIR__;
 		$include = array( 'x' );
 		$exclude = array( 'y' );
-		$result = $this->dirlist->scandir_recursive( $directory, $include, $exclude );
+		$result = DirList::scandir_recursive( $directory, $include, $exclude );
 		$expected = array();
 		self::assertEquals( $expected, $result, 'test_scandirrecursive_3' );
 	}

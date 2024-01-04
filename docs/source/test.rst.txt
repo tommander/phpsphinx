@@ -1,0 +1,264 @@
+Test
+====
+Paragraphs contain text and may contain inline markup:
+*emphasis*, **strong emphasis**, `interpreted text`, ``inline
+literals``, standalone hyperlinks (https://www.python.org),
+external hyperlinks (Python_), internal cross-references
+(example_), footnote references ([1]_), citation references
+([CIT2002]_).
+
+.. [1] A footnote contains body elements, consistently
+   indented by at least 3 spaces.
+
+.. [CIT2002] Just like a footnote, except the label is
+   textual.
+
+.. _Python: https://www.python.org
+
+.. _example:
+
+The "_example" target above points to this paragraph.
+
+Paragraphs are separated by blank lines and are left-aligned.
+
+Grid table
+----------
++------------------------+------------+----------+
+| Header row, column 1   | Header 2   | Header 3 |
++========================+============+==========+
+| body row 1, column 1   | column 2   | column 3 |
++------------------------+------------+----------+
+| body row 2             | Cells may span        |
++------------------------+-----------------------+
+
+Simple table
+------------
+====================  ==========  ==========
+Header row, column 1  Header 2    Header 3
+====================  ==========  ==========
+body row 1, column 1  column 2    column 3
+body row 2            Cells may span columns
+====================  ======================
+
+Bullet list
+-----------
+- First item
+
+- Second item
+
+- Third item
+
+   - Third first item
+
+   - Third second item
+
+Numbered list
+-------------
+1. First item
+
+5. Second item
+
+4. Third item
+
+   8. Third first item
+
+   2. Third second item
+
+Definition list
+---------------
+term
+   Definition
+
+another term
+   Definition
+
+   With two lines
+
+Field list
+----------
+
+:field1: Hello world
+         How are you?
+
+:field2: Another field.
+         With another line.
+
+         With another paragraph.
+
+Option list
+-----------
+
+-h                help
+--help            help
+--version         version
+--format=format   Output format.
+--inputdir=path   Input directory.
+                  Relative or absolute path.
+--outputdir=path  Output directory.
+                  Relative or absolute path.
+
+Literal block
+-------------
+Here I say something.
+
+   Here is a literal block.
+
+   Is it interesting or not?
+
+Here again something useless.
+
+Block quote
+-----------
+
+Now quote.
+
+   ?
+
+   -- Me (today)
+
+Doctest block
+-------------
+
+>>> print 'Whatever.'
+
+.. This is a comment
+   that is not visible
+   in the built document.
+
+.. admonition:: Title
+
+   Text
+
+.. attention::
+
+   Text
+
+.. caution::
+
+   Text
+
+.. danger::
+
+   Text
+
+.. error::
+
+   Text
+
+.. hint::
+
+   Text
+
+.. important::
+
+   Text
+
+.. note::
+
+   Text
+
+.. tip::
+
+   Text
+
+.. warning::
+
+   Text
+
+.. topic:: Topic title
+
+   Hello world.
+
+   This is interesting.
+
+.. sidebar:: Sidebar title
+
+   Sidebar content.
+
+   For real.
+
+.. parsed-literal::
+
+   echo 'Yes';
+
+.. code:: php
+
+   <?php
+   $code = '1';
+
+.. math::
+
+  2H_2+O_2=2H_2O
+
+.. rubric:: RubricName
+
+.. epigraph::
+
+   One two three.
+
+   --- Me (yesterday)
+
+.. highlights::
+
+   Hello world.
+
+   One two three.
+
+.. pull-quote::
+
+   Aaa bbb Ccc.
+
+   Ddd eee Fff.
+
+.. compound::
+
+   This is sooo...
+
+   Compound...
+
+   You can even feel it.
+
+.. container:: some classess
+
+   Hello, I am containerized.
+
+   Along with this paragraph.
+
+.. table:: Truth table for "not"
+   :widths: auto
+
+   =====  =====
+     A    not A
+   =====  =====
+   False  True
+   True   False
+   =====  =====
+
+.. csv-table:: Frozen Delights!
+   :header: "Treat", "Quantity", "Description"
+   :widths: 15, 10, 30
+
+   "Albatross", 2.99, "On a stick!"
+   "Crunchy Frog", 1.49, "If we took the bones out,
+   it wouldn't be crunchy, now would it?"
+   "Gannet Ripple", 1.99, "On a stick!"
+
+.. list-table:: Frozen Delights!
+   :widths: 15 10 30
+   :header-rows: 1
+
+   * - Treat
+     - Quantity
+     - Description
+   * - Albatross
+     - 2.99
+     - On a stick!
+   * - Crunchy Frog
+     - 1.49
+     - If we took the bones out, it wouldn't be
+       crunchy, now would it?
+   * - Gannet Ripple
+     - 1.99
+     - On a stick!
+
+.. contents::

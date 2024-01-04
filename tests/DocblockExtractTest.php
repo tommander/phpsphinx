@@ -18,42 +18,11 @@ use TMD\Documentation\DocblockExtract;
  */
 final class DocblockExtractTest extends BaseTest {
 	/**
-	 * DocblockExtract instance.
-	 *
-	 * @var DocblockExtract|null
-	 */
-	private ?DocblockExtract $docblockextract = null;
-
-	/**
-	 * Test setup - create new instance of DocblockExtract.
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		$this->docblockextract = new DocblockExtract();
-	}
-
-	/**
-	 * Test teardown - free the instance of DocblockExtract.
-	 *
-	 * @return void
-	 */
-	protected function tearDown(): void {
-		unset( $this->docblockextract );
-	}
-
-	/**
 	 * Test of function `code_object`.
 	 *
 	 * @return void
 	 */
 	public function testCodeObject(): void {
-		// 0/ Check dependencies and prerequisites.
-		if ( is_a( $this->docblockextract, DocblockExtract::class ) !== true ) {
-			self::fail( 'test_codeobject_0' );
-			return;
-		}
-
 		// 1/ Empty strings.
 		$type = '';
 		$name = '';
@@ -63,7 +32,7 @@ final class DocblockExtractTest extends BaseTest {
 			'name' => '',
 			'docblock' => '',
 		);
-		$result = $this->docblockextract->code_object( $type, $name, $docblock );
+		$result = DocblockExtract::code_object( $type, $name, $docblock );
 		self::assertEquals( $expected, $result, 'test_codeobject_1' );
 
 		// 2/ Populated strings.
@@ -75,7 +44,7 @@ final class DocblockExtractTest extends BaseTest {
 			'name' => $name,
 			'docblock' => $docblock,
 		);
-		$result = $this->docblockextract->code_object( $type, $name, $docblock );
+		$result = DocblockExtract::code_object( $type, $name, $docblock );
 		self::assertEquals( $expected, $result, 'test_codeobject_2' );
 	}
 
@@ -85,18 +54,12 @@ final class DocblockExtractTest extends BaseTest {
 	 * @return void
 	 */
 	public function testGetCodeHierarchy(): void {
-		// 0/ Check dependencies and prerequisites.
-		if ( is_a( $this->docblockextract, DocblockExtract::class ) !== true ) {
-			self::fail( 'test_getcodehierarchy_0' );
-			return;
-		}
-
 		// 1/ Empty.
 		$tokens = array();
 		$class_name = '';
 		$last_namespace = '';
 		$expected = array();
-		$result = $this->docblockextract->get_code_hierarchy( $tokens, $class_name, $last_namespace );
+		$result = DocblockExtract::get_code_hierarchy( $tokens, $class_name, $last_namespace );
 		self::assertEquals( $expected, $result, 'test_getcodehierarchy_1' );
 
 		// 2/ Something.
@@ -120,7 +83,7 @@ final class DocblockExtractTest extends BaseTest {
 		// phpcs:enable
 		$class_name = '';
 		$last_namespace = '';
-		$result = $this->docblockextract->get_code_hierarchy( $tokens, $class_name, $last_namespace );
+		$result = DocblockExtract::get_code_hierarchy( $tokens, $class_name, $last_namespace );
 		self::assertEquals( $expected, $result, 'test_getcodehierarchy_2' );
 	}
 }

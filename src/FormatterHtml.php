@@ -8,7 +8,7 @@
 
 declare(strict_types=1);
 
-namespace TMD\Documentation\Formatters;
+namespace TMD\Documentation;
 
 use TMD\Documentation\Helper;
 use TMD\Documentation\Interfaces\FormatterInterface;
@@ -19,6 +19,7 @@ use TMD\Documentation\PhpDoc;
  *
  * @psalm-import-type FileIndex from \TMD\Documentation\PhpSphinx
  * @psalm-import-type CodeHierarchy from \TMD\Documentation\DocblockExtract
+ * @psalm-import-type DocblockData from \TMD\Documentation\PhpDoc
  */
 class FormatterHtml implements FormatterInterface {
 	/**
@@ -61,6 +62,16 @@ class FormatterHtml implements FormatterInterface {
 		'version' => '<div class="property"><span class="propname">version</span><span class="propvalue"> %%-desc-%%</span></div>',
 	);
 
+
+	/**
+	 * Do not use.
+	 *
+	 * @deprecated 0.0.0
+	 * @psalm-suppress PossiblyUnusedMethod
+	 */
+	public function __construct() {
+	}
+
 	/**
 	 * Renders a code hierarchy item as HTML.
 	 *
@@ -86,13 +97,11 @@ class FormatterHtml implements FormatterInterface {
 	 * @return string
 	 */
 	public static function format( string $title, array $hierarchy, string $commit = '', string $file_rel = '' ): string { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
-		$file_template_path = Helper::make_path( __DIR__, '..', '..', 'templates', 'html', 'file.html' );
+		$file_template_path = Helper::make_path( __DIR__, '..', 'templates', 'html', 'file.html' );
 		$file_template = '';
 		if ( file_exists( $file_template_path ) === true ) {
 			$file_template = file_get_contents( $file_template_path );
 		}
-
-		$phpdoc = new PhpDoc();
 
 		$hierarchy_content = '';
 		foreach ( $hierarchy as $hier_item ) {
@@ -100,10 +109,8 @@ class FormatterHtml implements FormatterInterface {
 			$hier_type = Helper::make_string( $hier_item['type'] );
 			if ( '' !== $hier_docblock || 'namespace' === $hier_type ) {
 				$hier_name = Helper::make_string( $hier_item['name'] );
-				$phpdoc->clear();
-				$phpdoc->docblock = "<?php\n" . $hier_docblock;
-				$phpdoc->parse();
-				$hier_rst = self::output_str( $phpdoc );
+				$phpdoc_data = PhpDoc::get_phpdoc_data( "<?php\n" . $hier_docblock );
+				$hier_rst = self::output_str( $phpdoc_data['description'], $phpdoc_data['data'] );
 				$hierarchy_content .= self::type_to_html( $hier_type, $hier_name, $hier_rst, ) . PHP_EOL;
 			}
 		}
@@ -111,6 +118,45 @@ class FormatterHtml implements FormatterInterface {
 		return sprintf(
 			$file_content,
 			$title
+		);
+	}
+
+
+	/**
+	 * Return a link to a GitHub repo commit.
+	 *
+	 * @param string $commit Commit.
+	 *
+	 * @return string
+	 */
+	public static function commit_link( string $commit ): string {
+		if ( '' === trim( $commit ) ) {
+			return '';
+		}
+		return sprintf(
+			'<a href="%2$s%3$s">#%1$s</a>',
+			substr( $commit, 0, 7 ),
+			'https://github.com/tommander/phpsphinx/commit/',
+			$commit
+		);
+	}
+
+	/**
+	 * Return a link to a GitHub repo file.
+	 *
+	 * @param string $commit Commit.
+	 * @param string $file   File.
+	 *
+	 * @return string
+	 */
+	public static function file_link( string $commit, string $file ): string {
+		if ( '' === trim( $file ) ) {
+			return '';
+		}
+		return sprintf(
+			'<a href="%2$s%1$s">%1$s</a>',
+			$file,
+			'https://github.com/tommander/phpsphinx/blob/' . $commit . '/'
 		);
 	}
 
@@ -124,31 +170,17 @@ class FormatterHtml implements FormatterInterface {
 	 * @return string
 	 */
 	public static function generated_automatically( string $date, string $commit, string $file ): string {
-		$file_template_path = Helper::make_path( __DIR__, '..', '..', 'templates', 'html', 'generated.html' );
+		$file_template_path = Helper::make_path( __DIR__, '..', 'templates', 'html', 'generated.html' );
 		$file_template = '';
 		if ( file_exists( $file_template_path ) === true ) {
 			$file_template = file_get_contents( $file_template_path );
 		}
 
-		$file_link = '';
-		if ( '' !== $file ) {
-			$file_link = '<a href="%2$s%1$s">%1$s</a>';
-		}
-
 		return sprintf(
 			$file_template,
 			$date,
-			sprintf(
-				'<a href="%2$s%3$s">#%1$s</a>',
-				substr( $commit, 0, 7 ),
-				'https://github.com/tommander/phpsphinx/commit/',
-				$commit
-			),
-			sprintf(
-				$file_link,
-				$file,
-				'https://github.com/tommander/phpsphinx/blob/' . $commit . '/'
-			)
+			self::commit_link( $commit ),
+			self::file_link( $commit, $file ),
 		) . PHP_EOL;
 	}
 
@@ -165,7 +197,7 @@ class FormatterHtml implements FormatterInterface {
 		}
 		$underline = str_repeat( '=', strlen( $title ) );
 
-		$index_template_path = Helper::make_path( __DIR__, '..', '..', 'templates', 'html', 'index.html' );
+		$index_template_path = Helper::make_path( __DIR__, '..', 'templates', 'html', 'index.html' );
 		$index_template = '';
 		if ( file_exists( $index_template_path ) === true ) {
 			$index_template = file_get_contents( $index_template_path );
@@ -209,16 +241,17 @@ class FormatterHtml implements FormatterInterface {
 	}
 
 	/**
-	 * Returns a representation of the referenced PhpDoc instance in HTML.
+	 * Returns a representation of the referenced PhpDoc data in restructuredText.
 	 *
-	 * @param \TMD\Documentation\PhpDoc $phpdoc PHPDoc.
+	 * @param string       $description Description.
+	 * @param DocblockData $data        Data.
 	 *
 	 * @return string
 	 */
-	public static function output_str( \TMD\Documentation\PhpDoc $phpdoc ): string {
-		$res = $phpdoc->description . PHP_EOL;
+	public static function output_str( string $description, array $data ): string { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
+		$res = $description . PHP_EOL;
 
-		foreach ( $phpdoc->data as $data_tag => $data_data ) {
+		foreach ( $data as $data_tag => $data_data ) {
 			if ( is_array( $data_data['value'] ) ) {
 				try {
 					foreach ( $data_data['value'] as &$one_value ) {
@@ -230,7 +263,7 @@ class FormatterHtml implements FormatterInterface {
 								$arr[ $field ] = trim( $one_value[ $field ] );
 							}
 						}
-						$res .= $phpdoc->replace( self::CLEAN_HTML_DATA[ $data_tag ], $arr ) . PHP_EOL;
+						$res .= PhpDoc::replace( self::CLEAN_HTML_DATA[ $data_tag ], $arr ) . PHP_EOL;
 					}
 				} catch ( \ArgumentCountError $exc ) {
 					printf(

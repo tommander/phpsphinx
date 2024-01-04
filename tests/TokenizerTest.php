@@ -18,45 +18,15 @@ use TMD\Documentation\Tokenizer;
  */
 final class TokenizerTest extends BaseTest {
 	/**
-	 * Tokenizer instance.
-	 *
-	 * @var Tokenizer|null
-	 */
-	private ?Tokenizer $tokenizer = null;
-
-	/**
-	 * Test setup - create new instance of Tokenizer.
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		$this->tokenizer = new Tokenizer();
-	}
-
-	/**
-	 * Test teardown - free the instance of Tokenizer.
-	 *
-	 * @return void
-	 */
-	protected function tearDown(): void {
-		unset( $this->tokenizer );
-	}
-
-	/**
 	 * Test of function `tokenize_file`.
 	 *
 	 * @return void
 	 */
 	public function testTokenizeFile(): void {
-		if ( is_a( $this->tokenizer, Tokenizer::class ) !== true ) {
-			self::fail( 'test_tokenizefile_0' );
-			return;
-		}
-
 		// 1/ Empty.
 		$file = '';
 		$expected = false;
-		$result = $this->tokenizer->tokenize_file( $file );
+		$result = Tokenizer::tokenize_file( $file );
 		self::assertEquals( $expected, $result, 'test_format_1' );
 
 		// 1/ Empty.
@@ -82,7 +52,7 @@ final class TokenizerTest extends BaseTest {
 			array( 'name' => 'string', 'content' => '}' ),
 		);
 		// phpcs:enable
-		$result = $this->tokenizer->tokenize_file( $file );
+		$result = Tokenizer::tokenize_file( $file );
 		self::assertEquals( $expected, $result, 'test_format_2' );
 	}
 }

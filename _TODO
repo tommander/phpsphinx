@@ -1,0 +1,14 @@
+Independent classes
+static DirList
+static DocblockExtract
+static Helper
+static RegexBuilder
+static Tokenizer
+
+Dependent classes
+static FormatterRst -> Helper, PhpDoc
+static FormatterHtml -> Helper, PhpDoc
+FileIndexer -> Helper, FormatterInterface
+Parameters -> Helper, FormatterInterface
+PhpSphinx -> DirList, DocblockExtract, Parameters, Tokenizer, FileIndexer, Helper, FormatterInterface
+PhpDoc -> RegexBuilder

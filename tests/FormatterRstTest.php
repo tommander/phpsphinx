@@ -11,48 +11,18 @@ declare(strict_types=1);
 namespace TMD\Documentation\Tests;
 
 use PHPUnit\Framework\TestCase;
-use TMD\Documentation\Formatters\FormatterRst;
+use TMD\Documentation\FormatterRst;
 
 /**
  * Test class for FormatterRst.
  */
 final class FormatterRstTest extends BaseTest {
 	/**
-	 * FormatterRst instance.
-	 *
-	 * @var FormatterRst|null
-	 */
-	private ?FormatterRst $formatterrst = null;
-
-	/**
-	 * Test setup - create new instance of FormatterRst.
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		$this->formatterrst = new FormatterRst();
-	}
-
-	/**
-	 * Test teardown - free the instance of FormatterRst.
-	 *
-	 * @return void
-	 */
-	protected function tearDown(): void {
-		unset( $this->formatterrst );
-	}
-
-	/**
 	 * Test of function `directive`.
 	 *
 	 * @return void
 	 */
 	public function testDirective(): void {
-		if ( is_a( $this->formatterrst, FormatterRst::class ) !== true ) {
-			self::fail( 'test_directive_0' );
-			return;
-		}
-
 		// 1/ Empty
 		$directive = '';
 		$name = '';
@@ -100,12 +70,6 @@ final class FormatterRstTest extends BaseTest {
 	 * @return void
 	 */
 	public function testTypeToRst(): void {
-		// public static function type_to_rst( string $type, string $name, string $content ): string {.
-		if ( is_a( $this->formatterrst, FormatterRst::class ) !== true ) {
-			self::fail( 'test_typetorst_0' );
-			return;
-		}
-
 		// 1/ Empty
 		$type = '';
 		$name = '';
@@ -145,12 +109,6 @@ final class FormatterRstTest extends BaseTest {
 	 * @return void
 	 */
 	public function testFixIndentation(): void {
-		// public static function fix_indentation( string $text, int $min_indent ): string {.
-		if ( is_a( $this->formatterrst, FormatterRst::class ) !== true ) {
-			self::fail( 'test_fixindentation_0' );
-			return;
-		}
-
 		// 1/ Empty
 		$text = '';
 		$min_indent = 0;
@@ -186,12 +144,6 @@ final class FormatterRstTest extends BaseTest {
 	 * @return void
 	 */
 	public function testFormat(): void {
-		// public static function format( string $title, array $hierarchy ): string {.
-		if ( is_a( $this->formatterrst, FormatterRst::class ) !== true ) {
-			self::fail( 'test_format_0' );
-			return;
-		}
-
 		// 1/ Empty.
 		$title = '';
 		$hierarchy = array();

@@ -10,8 +10,6 @@ declare(strict_types=1);
 
 namespace TMD\Documentation;
 
-use Exception;
-
 /**
  * Class for regex building features.
  *

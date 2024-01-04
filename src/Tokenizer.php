@@ -24,7 +24,7 @@ class Tokenizer {
 	 *
 	 * @return TokensList|false
 	 */
-	public function tokenize_file( string $file ): array|false {
+	public static function tokenize_file( string $file ): array|false {
 		if ( file_exists( $file ) !== true ) {
 			return false;
 		}

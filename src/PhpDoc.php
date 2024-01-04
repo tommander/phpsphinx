@@ -10,26 +10,13 @@ declare(strict_types=1);
 
 namespace TMD\Documentation;
 
-use Exception;
-
 /**
  * The PhpDoc class parses PHPDoc block comments.
  *
  * @psalm-type DocblockData = array<string, array{regex: string, fields: list<string>, value: bool|list<array<string, string>>}>
+ * @psalm-type PhpdocData = array{description:string,data:DocblockData}
  */
-class PhpDoc implements \Stringable {
-	/**
-	 * Original DocBlock
-	 *
-	 * @var string
-	 */
-	public string $docblock = '';
-	/**
-	 * Description (short and long)
-	 *
-	 * @var string
-	 */
-	public string $description = '';
+class PhpDoc {
 	/**
 	 * Arranged data extracted from DocBlock
 	 *
@@ -202,23 +189,6 @@ class PhpDoc implements \Stringable {
 			'value' => array(),
 		),
 	);
-	/**
-	 * PhpDoc instance data.
-	 *
-	 * @var DocblockData
-	 */
-	public array $data = self::CLEAN_DATA;
-
-	/**
-	 * Clear the instance data.
-	 *
-	 * @return void
-	 */
-	public function clear(): void {
-		$this->data = self::CLEAN_DATA;
-		$this->docblock = '';
-		$this->description = '';
-	}
 
 	/**
 	 * Replace special placeholders in the text.
@@ -232,7 +202,7 @@ class PhpDoc implements \Stringable {
 	 * $result = replace( 'hello %%-user-%%', array( 'user' => 'Anonymous' ) );
 	 * echo $result; //= 'hello Anonymous'
 	 */
-	public function replace( string $input, array $params ): string {
+	public static function replace( string $input, array $params ): string {
 		return preg_replace_callback(
 			'/%%-([A-Za-z0-9_-]+)-%%/',
 			function ( array $matches ) use ( $params ): string {
@@ -253,27 +223,28 @@ class PhpDoc implements \Stringable {
 	 *
 	 * The tag must have an item in `PhpDoc::$data` e.g. to know, what regex to match the input against.
 	 *
-	 * @param string $input Tag value.
-	 * @param string $tag   Tag name.
+	 * @param DocblockData $data  Data.
+	 * @param string       $input Tag value.
+	 * @param string       $tag   Tag name.
 	 *
 	 * @return string|bool True in case all went fine, false or string (with error message) otherwise.
 	 */
-	public function parse_tag( string $input, string $tag ): string|bool {
+	public static function parse_tag( array &$data, string $input, string $tag ): string|bool { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		if (
-			array_key_exists( $tag, $this->data ) !== true ||
-			array_key_exists( 'regex', $this->data[ $tag ] ) !== true ||
-			array_key_exists( 'fields', $this->data[ $tag ] ) !== true ||
-			array_key_exists( 'value', $this->data[ $tag ] ) !== true
+			array_key_exists( $tag, $data ) !== true ||
+			array_key_exists( 'regex', $data[ $tag ] ) !== true ||
+			array_key_exists( 'fields', $data[ $tag ] ) !== true ||
+			array_key_exists( 'value', $data[ $tag ] ) !== true
 		) {
 			return 'Unknown or misconfigured tag "' . $tag . '"';
 		}
 
-		if ( count( $this->data[ $tag ]['fields'] ) === 0 ) {
-			$this->data[ $tag ]['value'] = true;
+		if ( count( $data[ $tag ]['fields'] ) === 0 ) {
+			$data[ $tag ]['value'] = true;
 			return true;
 		}
 
-		$regex = RegexBuilder::pattern( $this->data[ $tag ]['regex'] );
+		$regex = RegexBuilder::pattern( $data[ $tag ]['regex'] );
 
 		if ( '' === $regex ) {
 			return 'Empty regex';
@@ -283,22 +254,22 @@ class PhpDoc implements \Stringable {
 		}
 
 		$tmp = array();
-		foreach ( $this->data[ $tag ]['fields'] as $field ) {
+		foreach ( $data[ $tag ]['fields'] as $field ) {
 			$subject = $matches[ $field ] ?? '';
 			if ( '' === $subject ) {
 				continue;
 			}
 			$tmp[ $field ] = preg_replace( '/' . RegexBuilder::RE_MULTILINE_TRASH . '/m', ' ', $subject );
 		}
-		if ( is_bool( $this->data[ $tag ]['value'] ) ) {
-			$this->data[ $tag ]['value'] = array();
+		if ( is_bool( $data[ $tag ]['value'] ) ) {
+			$data[ $tag ]['value'] = array();
 		}
 		/**
 		 * Hello.
 		 *
 		 * @psalm-suppress PossiblyInvalidArrayAssignment
 		 */
-		$this->data[ $tag ]['value'][] = $tmp;
+		$data[ $tag ]['value'][] = $tmp;
 		return true;
 	}
 
@@ -307,11 +278,15 @@ class PhpDoc implements \Stringable {
 	 *
 	 * @param string $docblock Input DocBlock.
 	 *
-	 * @return void
+	 * @return PhpdocData
 	 *
 	 * @throws \Exception Yes it does.
 	 */
-	public function parse_docblock( string $docblock ): void {
+	public static function parse_docblock( string $docblock ): array {
+		$result = array(
+			'description' => '',
+			'data' => self::CLEAN_DATA,
+		);
 		$regexp = '/(?:^\s*\*\s+@(?<attrname>[A-Za-z-]+)(?<attrval>(?:.*)(?:(?:\n\s*\*\s+[^@].*)*))|^\s*\*(?<text>[^\n\/]+))/m';
 		$ret = preg_match_all(
 			$regexp,
@@ -322,7 +297,7 @@ class PhpDoc implements \Stringable {
 		);
 
 		if ( is_int( $ret ) !== true || 0 === $ret ) {
-			return;
+			return $result;
 		}
 
 		/**
@@ -332,7 +307,7 @@ class PhpDoc implements \Stringable {
 		 */
 		foreach ( $matches as $one_match ) {
 			if ( array_key_exists( 'text', $one_match ) ) {
-				$this->description .= trim( $one_match['text'] ) . PHP_EOL;
+				$result['description'] .= trim( $one_match['text'] ) . PHP_EOL;
 				continue;
 			}
 
@@ -340,7 +315,7 @@ class PhpDoc implements \Stringable {
 			if ( array_key_exists( 'attrname', $one_match ) ) {
 				$attrname = trim( $one_match['attrname'] );
 			}
-			if ( array_key_exists( $attrname, $this->data ) !== true ) {
+			if ( array_key_exists( $attrname, $result['data'] ) !== true ) {
 				continue;
 			}
 
@@ -349,7 +324,7 @@ class PhpDoc implements \Stringable {
 				$attrval = trim( $one_match['attrval'] );
 			}
 
-			$parse_result = $this->parse_tag( $attrval, $attrname );
+			$parse_result = self::parse_tag( $result['data'], $attrval, $attrname );
 			if ( is_string( $parse_result ) ) {
 				throw new \Exception(
 					sprintf(
@@ -360,43 +335,31 @@ class PhpDoc implements \Stringable {
 				);
 			}
 		}
+
+		return $result;
 	}
 
 	/**
-	 * Extract DocBlock from input property and starting parsing it.
+	 * Undocumented function
 	 *
-	 * @return void
+	 * @param string $docblock Docblock.
+	 *
+	 * @return PhpdocData
 	 */
-	public function parse(): void {
-		$tokens = token_get_all( $this->docblock );
+	public static function get_phpdoc_data( string $docblock ): array {
+		$tokens = token_get_all( $docblock );
 
-		$docblock = null;
+		$docblock_2 = null;
 		foreach ( $tokens as $token ) {
 			if ( T_DOC_COMMENT === $token[0] ) {
-				$docblock = $token[1];
+				$docblock_2 = $token[1];
 				break;
 			}
 		}
-		if ( null === $docblock ) {
-			return;
+		if ( is_string( $docblock_2 ) !== true ) {
+			$docblock_2 = '';
 		}
 
-		$this->parse_docblock( $docblock );
-	}
-
-	/**
-	 * Return a text representation of this instance of PhpDoc.
-	 *
-	 * @return string
-	 */
-	public function __toString(): string {
-		return json_encode(
-			array(
-				'description' => $this->description,
-				'data' => $this->data,
-				'docblock' => $this->docblock,
-			),
-			JSON_PRETTY_PRINT
-		);
+		return self::parse_docblock( $docblock_2 );
 	}
 }

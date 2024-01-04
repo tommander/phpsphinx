@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'TMD Documentation'
+project = 'PhpSphinx Documentation'
 copyright = '2023, Tommander'
 author = 'Tommander'
 
@@ -45,3 +45,5 @@ primary_domain = 'php'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
+
+html_static_path = ['_static']

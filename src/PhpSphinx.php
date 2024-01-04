@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace TMD\Documentation;
 
 use TMD\Documentation\Interfaces\FormatterInterface;
-use TMD\Documentation\Formatters\FormatterRst;
+use TMD\Documentation\FormatterRst;
 
 /**
  * The PhpSphinx class is glueing together features to extract and render inline documentation from PHP source files.
@@ -57,29 +57,11 @@ class PhpSphinx {
 	public static string $name_text = 'PHPSphinx';
 
 	/**
-	 * DirList instance.
-	 *
-	 * @var DirList
-	 */
-	private DirList $dir_list;
-	/**
-	 * DocblockExtract instance.
-	 *
-	 * @var DocblockExtract
-	 */
-	private DocblockExtract $docblock_extract;
-	/**
 	 * Parameters instance.
 	 *
 	 * @var Parameters
 	 */
 	private Parameters $parameters;
-	/**
-	 * Tokenizer instance.
-	 *
-	 * @var Tokenizer
-	 */
-	private Tokenizer $tokenizer;
 	/**
 	 * FileIndexer instance.
 	 *
@@ -91,10 +73,7 @@ class PhpSphinx {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->dir_list = new DirList();
-		$this->docblock_extract = new DocblockExtract();
 		$this->parameters = new Parameters();
-		$this->tokenizer = new Tokenizer();
 		$this->fileindexer = new FileIndexer();
 	}
 
@@ -235,7 +214,7 @@ class PhpSphinx {
 
 		// Recursive dir scan.
 		$this->writeln( 'Searching for PHP source files...' );
-		$artifact_fileinfos = $this->dir_list->scandir_recursive( $inputdir, array( '/\.php$/' ), array( '/vendor\//', '/\.asset\.php$/', '/\/tests\/Test/' ) );
+		$artifact_fileinfos = DirList::scandir_recursive( $inputdir, array( '/\.php$/' ), array( '/vendor\//', '/\.asset\.php$/', '/\/tests\/Test/' ) );
 		$this->writeln( 'Found ' . strval( count( $artifact_fileinfos ) ) . ' files.' );
 		foreach ( $artifact_fileinfos as $phpfile_info ) {
 			$phpfile_full = $phpfile_info->getPathname();
@@ -245,7 +224,7 @@ class PhpSphinx {
 
 			// Tokenize content.
 			$this->writeln( '   Tokenizing...' );
-			$artifact_tokenlist = $this->tokenizer->tokenize_file( $phpfile_full );
+			$artifact_tokenlist = Tokenizer::tokenize_file( $phpfile_full );
 			if ( false === $artifact_tokenlist ) {
 				$this->writeln( '   [WARNING] File cannot be tokenized.' );
 				continue;
@@ -254,15 +233,15 @@ class PhpSphinx {
 			// Create code hierarchy and collect namespaces.
 			$this->writeln( '   Creating code hierarchy...' );
 			$namespace = '';
-			$artifact_codehierarchy = $this->docblock_extract->get_code_hierarchy( $artifact_tokenlist, $phpfile_name, $namespace );
+			$artifact_codehierarchy = DocblockExtract::get_code_hierarchy( $artifact_tokenlist, $phpfile_name, $namespace );
 			if ( '' !== $namespace && in_array( $namespace, $namespace_list, true ) !== true ) {
 				$namespace_list[] = $namespace;
 			}
 
 			// Format code map.
 			$this->writeln( '   Formatting code map...' );
-			$file_relative = Helper::relative_path( realpath( Helper::make_path( __DIR__, '..' ) ), $phpfile_full );
-			$outfile_content = $formatter_intf::format( $phpfile_name, $artifact_codehierarchy, Helper::make_string( $commit ), $file_relative );
+			$file_relative = Helper::relative_path( realpath( Helper::make_path( __DIR__, '..' ) ), realpath( $phpfile_full ) );
+			$artifact_outputcontent = $formatter_intf::format( $phpfile_name, $artifact_codehierarchy, Helper::make_string( $commit ), $file_relative );
 
 			// Name output file and create output file path.
 			$this->writeln( '   Creating file name...' );
@@ -282,7 +261,7 @@ class PhpSphinx {
 			$this->writeln( '   File will be saved to "' . $outfile_name . '"' );
 			if ( true !== $dry_run ) {
 				$outfile = Helper::make_path( $outputdir, $outfile_name );
-				file_put_contents( $outfile, $outfile_content );
+				file_put_contents( $outfile, $artifact_outputcontent );
 			}
 
 			$this->writeln( '   Done.' );

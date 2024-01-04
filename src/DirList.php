@@ -34,7 +34,7 @@ class DirList {
 	 *
 	 * @return SplFileInfoArray List of file info for all files found.
 	 */
-	public function scandir_recursive( string $directory, array $include, array $exclude ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
+	public static function scandir_recursive( string $directory, array $include, array $exclude ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		// Check if the input is an existing directory.
 		if ( true !== \file_exists( $directory ) || true !== is_dir( $directory ) ) {
 			return array();

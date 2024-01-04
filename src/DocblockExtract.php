@@ -28,7 +28,7 @@ class DocblockExtract {
 	 *
 	 * @return CodeObject
 	 */
-	public function code_object( string $type = '', string $name = '', string $docblock = '' ): array {
+	public static function code_object( string $type = '', string $name = '', string $docblock = '' ): array {
 		return array(
 			'type' => $type,
 			'name' => $name,
@@ -55,7 +55,7 @@ class DocblockExtract {
 	 *
 	 * @return CodeHierarchy
 	 */
-	public function get_code_hierarchy( array $tokens, string &$class_name, string &$last_namespace ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
+	public static function get_code_hierarchy( array $tokens, string &$class_name, string &$last_namespace ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		/**
 		 * Hello.
 		 *
@@ -75,7 +75,7 @@ class DocblockExtract {
 		 * @var int<0,5>
 		 */
 		$mode = 0;
-		$temp_object = $this->code_object();
+		$temp_object = self::code_object();
 		$named_objects = array( 'T_CLASS', 'T_INTERFACE', 'T_TRAIT', 'T_FUNCTION', 'T_CONST', 'T_NAMESPACE' );
 		$structural_elements = array( 'T_REQUIRE', 'T_REQUIRE_ONCE', 'T_INCLUDE', 'T_INCLUDE_ONCE', 'T_CLASS', 'T_INTERFACE', 'T_TRAIT', 'T_FUNCTION', 'T_CONST', 'T_VARIABLE', 'T_NAMESPACE' );
 		$text_objects = array( 'string', 'T_STRING', 'T_NAME_QUALIFIED' );
@@ -89,7 +89,7 @@ class DocblockExtract {
 				if ( 'T_DOC_COMMENT' !== $token_name ) {
 					continue;
 				}
-				$stack[] = $this->code_object( 'file', '', $token_content );
+				$stack[] = self::code_object( 'file', '', $token_content );
 				$mode = 1;
 				continue;
 			}
@@ -117,7 +117,7 @@ class DocblockExtract {
 					$temp_object['type'] = 'var';
 					$temp_object['name'] = $token_content;
 					$stack[] = $temp_object;
-					$temp_object = $this->code_object();
+					$temp_object = self::code_object();
 					$mode = 1;
 					continue;
 				}
@@ -129,7 +129,7 @@ class DocblockExtract {
 				}
 
 				$stack[] = $temp_object;
-				$temp_object = $this->code_object();
+				$temp_object = self::code_object();
 				$mode = 1;
 				continue;
 			}
@@ -161,7 +161,7 @@ class DocblockExtract {
 				}
 
 				$stack[] = $temp_object;
-				$temp_object = $this->code_object();
+				$temp_object = self::code_object();
 				$mode = 1;
 				continue;
 			}
@@ -178,7 +178,7 @@ class DocblockExtract {
 				if ( 'string' === $token_name && ')' === $token_content ) {
 					$temp_object['name'] .= '(' . implode( ', ', $temp_object['params'] ?? array() ) . ')';
 					$stack[] = $temp_object;
-					$temp_object = $this->code_object();
+					$temp_object = self::code_object();
 					$mode = 1;
 					continue;
 				}

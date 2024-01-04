@@ -18,54 +18,24 @@ use TMD\Documentation\PhpDoc;
  */
 final class PhpDocTest extends BaseTest {
 	/**
-	 * PhpDoc instance.
-	 *
-	 * @var PhpDoc|null
-	 */
-	private ?PhpDoc $phpdoc = null;
-
-	/**
-	 * Test setup - create new instance of PhpDoc.
-	 *
-	 * @return void
-	 */
-	protected function setUp(): void {
-		$this->phpdoc = new PhpDoc();
-	}
-
-	/**
-	 * Test teardown - free the instance of PhpDoc.
-	 *
-	 * @return void
-	 */
-	protected function tearDown(): void {
-		unset( $this->phpdoc );
-	}
-
-	/**
 	 * Test of function `replace`.
 	 *
 	 * @return void
 	 */
 	public function testReplace(): void {
-		if ( is_a( $this->phpdoc, PhpDoc::class ) !== true ) {
-			self::fail( 'test_replace_0' );
-			return;
-		}
-
 		// N/ XXX.
 		$input = '';
 		$params = array();
 		$expected = '';
-		$result = $this->phpdoc->replace( $input, $params );
-		self::assertEquals( $expected, $result, 'test_replace_N' );
+		$result = PhpDoc::replace( $input, $params );
+		self::assertEquals( $expected, $result, 'test_replace_1' );
 
 		// N/ XXX.
 		$input = '1nPuT';
 		$params = array();
 		$expected = '1nPuT';
-		$result = $this->phpdoc->replace( $input, $params );
-		self::assertEquals( $expected, $result, 'test_replace_N' );
+		$result = PhpDoc::replace( $input, $params );
+		self::assertEquals( $expected, $result, 'test_replace_2' );
 
 		// N/ XXX.
 		$input = 'Input: %%-thisworks-%% %%-doesnt#work-%% %%doesntwork%% %%-AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789_--%%';
@@ -76,8 +46,8 @@ final class PhpDocTest extends BaseTest {
 			'aabbccddeeffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz0123456789_-' => 'itworks!',
 		);
 		$expected = 'Input: Hola! %%-doesnt#work-%% %%doesntwork%% itworks!';
-		$result = $this->phpdoc->replace( $input, $params );
-		self::assertEquals( $expected, $result, 'test_replace_N' );
+		$result = PhpDoc::replace( $input, $params );
+		self::assertEquals( $expected, $result, 'test_replace_3' );
 	}
 
 	/**
@@ -86,29 +56,27 @@ final class PhpDocTest extends BaseTest {
 	 * @return void
 	 */
 	public function testParseTag(): void {
-		if ( is_a( $this->phpdoc, PhpDoc::class ) !== true ) {
-			self::fail( 'test_XXX_0' );
-			return;
-		}
-
 		// 1/ Empty.
 		$input = '';
 		$tag = '';
+		$data = array();
 		$expected = 'Unknown or misconfigured tag ""';
-		$result = $this->phpdoc->parse_tag( $input, $tag );
+		$result = PhpDoc::parse_tag( $data, $input, $tag );
 		self::assertEquals( $expected, $result, 'test_parsetag_1' );
 
 		// 2/ Abstract (because it has no field).
 		$input = '';
 		$tag = 'abstract';
+		$data = PhpDoc::CLEAN_DATA;
 		$expected_result = true;
 		$expected_value = true;
-		$result = $this->phpdoc->parse_tag( $input, $tag );
+		$result = PhpDoc::parse_tag( $data, $input, $tag );
 		self::assertEquals( $expected_result, $result, 'test_parsetag_2a' );
-		self::assertEquals( $expected_value, $this->phpdoc->data[ $tag ]['value'], 'test_parsetag_2b' );
+		self::assertEquals( $expected_value, $data[ $tag ]['value'], 'test_parsetag_2b' );
 
 		// 3/ Broken Abstract (because it has fields but no regex).
-		$this->phpdoc->data['brokenabstract'] = array(
+		$data = PhpDoc::CLEAN_DATA;
+		$data['brokenabstract'] = array(
 			'regex' => '',
 			'fields' => array( 'type' ),
 			'value' => false,
@@ -117,19 +85,19 @@ final class PhpDocTest extends BaseTest {
 		$tag = 'brokenabstract';
 		$expected_result = 'Empty regex';
 		$expected_value = false;
-		$result = $this->phpdoc->parse_tag( $input, $tag );
+		$result = PhpDoc::parse_tag( $data, $input, $tag );
 		self::assertEquals( $expected_result, $result, 'test_parsetag_3a' );
-		self::assertEquals( $expected_value, $this->phpdoc->data[ $tag ]['value'], 'test_parsetag_3b' );
-		unset( $this->phpdoc->data['brokenabstract'] );
+		self::assertEquals( $expected_value, $data[ $tag ]['value'], 'test_parsetag_3b' );
 
 		// 4/ Broken Abstract (because it has fields but no regex).
+		$data = PhpDoc::CLEAN_DATA;
 		$input = '@param string $hehehe Hehehe.';
 		$tag = 'author';
 		$expected_result = 'Input "@param string $hehehe Hehehe." does not match regex "/^\s*(?<name>.*)[\t ]+<(?<email>.*)>\s*$/"';
 		$expected_value = array();
-		$result = $this->phpdoc->parse_tag( $input, $tag );
+		$result = PhpDoc::parse_tag( $data, $input, $tag );
 		self::assertEquals( $expected_result, $result, 'test_parsetag_4a' );
-		self::assertEquals( $expected_value, $this->phpdoc->data[ $tag ]['value'], 'test_parsetag_4b' );
+		self::assertEquals( $expected_value, $data[ $tag ]['value'], 'test_parsetag_4b' );
 	}
 
 	/**
@@ -138,62 +106,45 @@ final class PhpDocTest extends BaseTest {
 	 * @return void
 	 */
 	public function testParseDocblock(): void {
-		if ( is_a( $this->phpdoc, PhpDoc::class ) !== true ) {
-			self::fail( 'test_XXX_0' );
-			return;
-		}
-
 		// N/ XXX.
 		$docblock = '';
-		$data_before = $this->phpdoc->data;
-		$this->phpdoc->parse_docblock( $docblock );
-		self::assertEquals( $data_before, $this->phpdoc->data, 'test_docblocktorst_N' );
+		$data_before = array(
+			'description' => '',
+			'data' => PhpDoc::CLEAN_DATA,
+		);
+		$data_after = PhpDoc::parse_docblock( $docblock );
+		self::assertEquals( $data_before, $data_after, 'test_parsedocblock_1' );
 
 		// N/ XXX.
 		$docblock = '/** @abstract */';
-		$data_expected = array_merge(
-			array(
-				'abstract' => array(
-					'value' => true,
+		$data_expected = array(
+			'description' => '',
+			'data' => array_merge(
+				array(
+					'abstract' => array(
+						'value' => true,
+					),
 				),
+				PhpDoc::CLEAN_DATA,
 			),
-			$this->phpdoc->data
 		);
-		$this->phpdoc->parse_docblock( $docblock );
-		self::assertEquals( $data_expected, $this->phpdoc->data, 'test_docblocktorst_N' );
+		$data_actual = PhpDoc::parse_docblock( $docblock );
+		self::assertEquals( $data_expected, $data_actual, 'test_parsedocblock_2' );
 	}
 
 	/**
-	 * Test of function `parse`.
+	 * Test of function `get_phpdoc_data`.
 	 *
 	 * @return void
 	 */
-	public function testParse(): void {
-		if ( is_a( $this->phpdoc, PhpDoc::class ) !== true ) {
-			self::fail( 'test_XXX_0' );
-			return;
-		}
-
+	public function testGetPhpdocData(): void {
 		// N/ XXX.
-		$this->phpdoc->docblock = '';
-		$data_before = $this->phpdoc->data;
-		$this->phpdoc->parse();
-		self::assertEquals( $data_before, $this->phpdoc->data, 'test_docblocktorst_N' );
-	}
-
-	/**
-	 * Test of function `__toString`.
-	 *
-	 * @return void
-	 */
-	public function testToString(): void {
-		if ( is_a( $this->phpdoc, PhpDoc::class ) !== true ) {
-			self::fail( 'test_XXX_0' );
-			return;
-		}
-
-		// N/ XXX.
-		$this->phpdoc->clear();
-		self::assertNotEmpty( $this->phpdoc->__toString() );
+		$docblock = '';
+		$expected = array(
+			'description' => '',
+			'data' => PhpDoc::CLEAN_DATA,
+		);
+		$result = PhpDoc::get_phpdoc_data( $docblock );
+		self::assertEquals( $expected, $result, 'test_getphpdocdata_1' );
 	}
 }
