@@ -35,7 +35,10 @@
             "touch docs/source/api/.gitkeep",
             "@php index.php --format=\"html\" --inputdir=\".\" --outputdir=\"docs/source/api\""
         ],
-        "dot": "dot -Tsvg docs/source/_static/workflow.dot > docs/source/_static/workflow.svg",
+        "dot": [
+            "dot -Tsvg docs/source/_static/workflow.dot > docs/source/_static/workflow.svg",
+            "dot -Tsvg docs/source/_static/classes.dot > docs/source/_static/classes.svg"
+        ],
         "sphinx": [
             "make clean",
             "make html"
