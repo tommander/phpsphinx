@@ -60,7 +60,7 @@ class Parameters
             $this->params = getopt($this->short_params, $this->long_params);
         }
 
-        if ($before) {
+        if (is_callable($before)) {
             $res = call_user_func($before);
             if (true !== $res) {
                 return false;
