@@ -14,7 +14,7 @@ Parameters ``--format``, ``--inputdir`` and ``--outputdir`` are all required, so
 
 .. code:: sh
 
-   php index.php --format="rst" --inputdir="src/" --outputdir="docs/source/api"
+   php bin/phpsphinx --format="rst" --inputdir="src/" --outputdir="docs/source/api"
 
 If you want to define only specific files to read by the script or some other configuration, it needs to be changed in the code directly. For this specific case, you might want to check :php:meth:`TMD\\Documentation\\PhpSphinx::generate_documentation` in the part where :php:meth:`TMD\\Documentation\\DirList::scandir_recursive` is called, because there you can control included and excluded filenames via regular expressions.
 

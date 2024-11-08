@@ -52,7 +52,7 @@ After initial setup, the only effort is to keep up-to-date the static documentat
    		"phpdocs": [
    			"rm -rf docs/source/api/*",
    			"touch docs/source/api/.gitkeep",
-   			"@php index.php --inputdir=\".\" --outputdir=\"docs/source/api\""
+   			"@php bin/phpsphinx --inputdir=\".\" --outputdir=\"docs/source/api\""
    		],
    		"sphinx": [
    			"make clean",
