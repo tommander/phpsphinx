@@ -28,12 +28,12 @@
         "phpdocs": [
             "rm -rf docs/source/api/*",
             "touch docs/source/api/.gitkeep",
-            "@php index.php --inputdir=\".\" --outputdir=\"docs/source/api\""
+            "@php bin/phpsphinx --inputdir=\".\" --outputdir=\"docs/source/api\""
         ],
         "phpdocs-html": [
             "rm -rf docs/source/api/*",
             "touch docs/source/api/.gitkeep",
-            "@php index.php --format=\"html\" --inputdir=\".\" --outputdir=\"docs/source/api\""
+            "@php bin/phpsphinx --format=\"html\" --inputdir=\".\" --outputdir=\"docs/source/api\""
         ],
         "dot": [
             "dot -Tsvg docs/source/_static/workflow.dot > docs/source/_static/workflow.svg",
