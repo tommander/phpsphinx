@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Main entrypoint to PhpSphinx application.
  *
@@ -12,4 +13,4 @@ declare(strict_types=1);
 require_once __DIR__ . '/vendor/autoload.php';
 
 $cls = new TMD\Documentation\PhpSphinx();
-$cls->do_run();
+$cls->doRun();

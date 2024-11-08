@@ -1,4 +1,5 @@
 <?php
+
 /**
  * File for BaseTest class.
  *
@@ -15,5 +16,6 @@ use PHPUnit\Framework\TestCase;
 /**
  * Common class for tests.
  */
-abstract class BaseTest extends TestCase {
+abstract class BaseTest extends TestCase
+{
 }
