@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = 'PhpSphinx Documentation'
-copyright = '2023, Tommander'
+copyright = '2024, Tommander'
 author = 'Tommander'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.0'
+release = '0.2.0'
 
 
 # -- General configuration ---------------------------------------------------

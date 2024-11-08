@@ -50,7 +50,7 @@ class PhpSphinx
      *
      * @var string
      */
-    public static string $version_text = 'v0.1.0';
+    public static string $version_text = 'v0.2.0';
     /**
      * App name.
      *
