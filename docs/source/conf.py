@@ -17,12 +17,12 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'PhpSphinx Documentation'
+project = 'PhpSphinx API Documentation'
 copyright = '2024, Tommander'
 author = 'Tommander'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2.0'
+release = '0.3.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,7 +30,7 @@ release = '0.2.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx_rtd_theme', 'sphinxcontrib.phpdomain', 'sphinx.ext.graphviz']
+extensions = ['sphinx_rtd_theme', 'sphinxcontrib.phpdomain']
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -45,5 +45,3 @@ primary_domain = 'php'
 # a list of builtin themes.
 #
 html_theme = 'sphinx_rtd_theme'
-
-html_static_path = ['_static']
