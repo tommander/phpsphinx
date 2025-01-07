@@ -14,5 +14,35 @@ declare(strict_types=1);
  */
 require_once $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
-$cls = new TMD\Documentation\PhpSphinx();
-$cls->doRun();
+if ($argc < 3) {
+    throw new \Exception('Missing script arguments.');
+}
+
+$opt = getopt('i:o:');
+$input = $opt['i'] ?? null;
+$output = $opt['o'] ?? null;
+if (!is_string($input) || !is_string($output)) {
+    throw new \Exception('Incorrect script arguments.');
+}
+
+if (
+    !file_exists($input) || 
+    !is_file($input) ||
+    !is_readable($input)
+) {
+    throw new \Exception('Incorrect script "input" argument ' . $input);
+}
+
+if (
+    !file_exists($output) || 
+    !is_dir($output) ||
+    !is_writable($output)
+) {
+    throw new \Exception('Incorrect script "output" argument.');
+}
+
+$cls = new TMD\Documentation\StructureToRst();
+$res = $cls->parseXmlFile($input, $output);
+if (!$res) {
+    throw new \Exception('Parsing failed.');
+}
