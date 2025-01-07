@@ -1,6 +1,6 @@
 {
     "name": "tommander/phpsphinx",
-    "description": "PHP documentation preprocessor for Sphinx",
+    "description": "A simple bridge between phpDocumentor and Sphinx.",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -28,16 +28,8 @@
         "phpdocs": [
             "rm -rf docs/source/api/*",
             "touch docs/source/api/.gitkeep",
-            "@php bin/phpsphinx --inputdir=\".\" --outputdir=\"docs/source/api\""
-        ],
-        "phpdocs-html": [
-            "rm -rf docs/source/api/*",
-            "touch docs/source/api/.gitkeep",
-            "@php bin/phpsphinx --format=\"html\" --inputdir=\".\" --outputdir=\"docs/source/api\""
-        ],
-        "dot": [
-            "dot -Tsvg docs/source/_static/workflow.dot > docs/source/_static/workflow.svg",
-            "dot -Tsvg docs/source/_static/classes.dot > docs/source/_static/classes.svg"
+            "@php phpDocumentor.phar -d src --template=\"xml\" -t phpdoc",
+            "@php bin/phpsphinx -i\"phpdoc/structure.xml\" -o\"docs/source/api\""
         ],
         "sphinx": [
             "make clean",
@@ -46,9 +38,6 @@
         "docs": [
             "@phpdocs",
             "@sphinx"
-        ],
-        "docs-html": [
-            "@phpdocs-html"
         ]
     },
     "require": {
@@ -66,7 +55,6 @@
     "autoload": {
         "psr-4": {
             "TMD\\Documentation\\": "src/",
-            "TMD\\Documentation\\Interfaces\\": "src/Interfaces/",
             "TMD\\Documentation\\Tests\\": "tests/"
         },
         "exclude-from-classmap": [
