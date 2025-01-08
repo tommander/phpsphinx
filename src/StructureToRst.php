@@ -203,7 +203,7 @@ class StructureToRst
 
             foreach ($file->class as $class) {
                 /** @psalm-suppress RiskyTruthyFalsyComparison */
-                if ($class) {
+                if (!$class) {
                     continue;
                 }
                 /** @var SimpleXMLElement $class */
