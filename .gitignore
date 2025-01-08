@@ -1,9 +1,2 @@
 vendor
-docs/build
-docs/source/api/*.rst
-docs/source/api/*.json
-docs/source/api/**/
 .phpunit.result.cache
-.phpdoc
-phpDocumentor.phar
-phpdoc/structure.xml
