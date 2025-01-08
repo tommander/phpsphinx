@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 /**
@@ -14,15 +15,11 @@ declare(strict_types=1);
  */
 require_once $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
-if ($argc < 3) {
-    throw new \Exception('Missing script arguments.');
-}
-
 $opt = getopt('i:o:');
 $input = $opt['i'] ?? null;
 $output = $opt['o'] ?? null;
 if (!is_string($input) || !is_string($output)) {
-    throw new \Exception('Incorrect script arguments.');
+    throw new \Exception('Missing or incorrect script arguments.');
 }
 
 if (
@@ -30,7 +27,7 @@ if (
     !is_file($input) ||
     !is_readable($input)
 ) {
-    throw new \Exception('Incorrect script "input" argument ' . $input);
+    throw new \Exception('Incorrect script "input" argument.');
 }
 
 if (
