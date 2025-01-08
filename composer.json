@@ -24,26 +24,9 @@
             "@phpcs",
             "@psalm",
             "@phpunit"
-        ],
-        "phpdocs": [
-            "rm -rf docs/source/api/*",
-            "touch docs/source/api/.gitkeep",
-            "@php phpDocumentor.phar -d src --template=\"xml\" -t phpdoc",
-            "@php bin/phpsphinx -i\"phpdoc/structure.xml\" -o\"docs/source/api\""
-        ],
-        "sphinx": [
-            "make clean",
-            "make html"
-        ],
-        "docs": [
-            "@phpdocs",
-            "@sphinx"
         ]
     },
     "require": {
-        "php-di/php-di": "^7.0",
-        "psr/log": "^3.0",
-        "jfcherng/php-diff": "^6.15",
         "composer-runtime-api": "^2.2"
     },
     "require-dev": {
@@ -56,11 +39,7 @@
         "psr-4": {
             "TMD\\Documentation\\": "src/",
             "TMD\\Documentation\\Tests\\": "tests/"
-        },
-        "exclude-from-classmap": [
-            "docs/build",
-            "docs/source"
-        ]
+        }
     },
     "bin": ["bin/phpsphinx"]
 }
